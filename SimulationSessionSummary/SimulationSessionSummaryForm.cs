@@ -31,6 +31,7 @@ namespace SimulationSessionSummary_NS
         private IMission _mission;
         private SimulationSessionSummary _plugin;
         private SortableBindingList<PhysicalEntityWrapper> _userSelectedEntities = new SortableBindingList<PhysicalEntityWrapper>();
+        private List<IPhysicalEntity> ourEntityList = new List<IPhysicalEntity>();
 
         /// <summary>
         /// Local reference to the plugin class -- used for window configuration save/restore
@@ -135,7 +136,7 @@ namespace SimulationSessionSummary_NS
         {
             try
             {
-                // interpret the event args as a weaopn detonation event and get more information about 
+                // interpret the event args as a weapon detonation event and get more information about 
                 // the type of weapon that detonated.
 
                 IMission.WeaponDetonationEventArgs args = e as IMission.WeaponDetonationEventArgs;
@@ -159,30 +160,21 @@ namespace SimulationSessionSummary_NS
         /// <param name="e"></param>
         protected void HandleEntityPropertyChanges(object sender, PropertyChangedEventArgs e)
         {
-            PropertyChangedEventArgs args = (PropertyChangedEventArgs)e;
             try
             {
-                // This event can be used to handle specific entity property changes. 
-                // it would need to be attached to the entity or set of entities you 
-                // are interested in. 
-
-                // For instance, if you wanted to monitor the type of all the entities 
-                // in the scenario and take some action if the type is changed by the user, 
-                // on form load you may want to do something like the following 
-                // to attach this event handler:
-
-                // foreach(IPhysicalEntity entity in _mission.PhysicalEntities.Values)
-                // {
-                //     entity.PropertyChanged += HandleEntityPropertyChanges;
-                // }
-
-                // The remainder of this event handler would then handle the type change event. 
-
-                if (args.PropertyName == "Type")
+                /* note(anthony): yeah this is actually pointless since ourEntityList seems to be a list of pointers which updates automatically
+                if (sender is IPhysicalEntity entity)
                 {
-                    // Do something when the entity's type has changed 
-
+                    for (int i = 0; i < ourEntityList.Count; i++)
+                    {
+                        if (ourEntityList[i].ID == entity.ID)
+                        {
+                            ourEntityList[i] = entity; // Update the existing entity
+                            break;
+                        }
+                    }
                 }
+                */
             }
             catch (Exception ex)
             {
@@ -277,19 +269,50 @@ namespace SimulationSessionSummary_NS
             try
             {
                 this.EntityCount_Label.Text = _mission.PhysicalEntities.Count.ToString();
-                if (args.Action == NotifyCollectionChangedAction.Remove)
+                //note(anthony): so like, this may be completely useless? if we can just use _mission.PhysicalEntities for everything?? Why make anything custom at all?
+                // we can just keep track of weapon detonation events and do all of our stuff when the mission ends or when a button is pressed in the winform
+                // then we can make all our custom nice formatted lists and display the nice simulation session summary at the end
+                // Removing
+                if (args.Action == NotifyCollectionChangedAction.Remove && args.OldItems != null)
                 {
                     foreach (KeyValuePair<ulong, IPhysicalEntity> kvp in args.OldItems)
                     {
-                        // update plugin state based on items removed
+                        var removedEntity = kvp.Value;
 
-                        PhysicalEntityWrapper ew = _userSelectedEntities.FirstOrDefault(ent => ent.Entity == kvp.Value);
+                        var ew = _userSelectedEntities.FirstOrDefault(ent => ent.Entity == removedEntity);
                         if (ew != null)
                         {
                             _userSelectedEntities.Remove(ew);
                             _userSelectedEntities.ResetBindings();
                         }
+
+                        var entityToRemove = ourEntityList.FirstOrDefault(ent => ent.ID == kvp.Key);
+                        if (entityToRemove != null)
+                        {
+                            ourEntityList.Remove(entityToRemove);
+                        }
                     }
+                }
+
+                // Adding
+                if (args.Action == NotifyCollectionChangedAction.Add && args.NewItems != null)
+                {
+                    foreach (KeyValuePair<ulong, IPhysicalEntity> kvp in args.NewItems)
+                    {
+                        var newEntity = kvp.Value;
+
+                        // note(anthony): last sanity check to make sure it doesnt exist
+                        if (!ourEntityList.Any(ent => ent.ID == kvp.Key))
+                        {
+                            ourEntityList.Add(newEntity);
+                        }
+                    }
+                }
+
+                // note(anthony): this may not be necessary if we never need to use that event but lets just subscribe to it anyway why not
+                foreach (IPhysicalEntity entity in _mission.PhysicalEntities.Values)
+                {
+                    entity.PropertyChanged += HandleEntityPropertyChanges;
                 }
             }
             catch (Exception ex)
@@ -297,6 +320,7 @@ namespace SimulationSessionSummary_NS
                 Debug.WriteLine(ex.Message);
             }
         }
+
 
         #endregion
 
