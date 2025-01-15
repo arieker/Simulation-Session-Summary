@@ -83,19 +83,20 @@ namespace SimulationSessionSummary_NS
         /// <param name="e"></param>
         protected void HandleWeaponFire(object sender, EventArgs e)
         {
-            _mission.WeaponFire += HandleWeaponFire;
             try
             {
                 // get more information about the fire event
                 IMission.WeaponFireEventArgs args = e as IMission.WeaponFireEventArgs;
+                //note(anthony): THESE TWO THINGS ARE BASICALLY EXACTLY!! WHAT WE NEED!
                 IPhysicalEntity fe = args.FiringEntity;
                 IPhysicalEntity me = args.MunitionEntity;
-                // find out which plane fired this weapon (check the name of the ownship and reference this with our general list of all planes)
+                //note(anthony): find out which plane fired this weapon (check the name of the ownship and reference this with our general list of all planes)
                 // once we find which plane fired it, create a WeaponObject and add it to that planes list of weaponobjects
             }
             catch (Exception ex)
             {
                 Debug.WriteLine(ex.Message);
+                Debug.WriteLine("HandleWeaponFire");
                 //_mission.Logger.ErrorMessage(ex);
             }
         }
@@ -110,9 +111,6 @@ namespace SimulationSessionSummary_NS
         {
             try
             {
-                // attach this event handler with
-                _mission.WeaponDamage += HandleWeaponDamage;
-
                 IMission.WeaponDamageEventArgs args = e as IMission.WeaponDamageEventArgs;
                 IPhysicalEntity target = args.TargetEntity;
                 IPhysicalEntity weapon = args.MunitionEntity;
@@ -121,9 +119,9 @@ namespace SimulationSessionSummary_NS
             catch (Exception ex)
             {
                 Debug.WriteLine(ex.Message);
-
+                Debug.WriteLine("HandleWeaponDamage");
                 // to log in the error log:
-                //_mission.Logger.ErrorMessage(ex);
+                _mission.Logger.ErrorMessage(ex);
             }
 
         }
@@ -135,8 +133,6 @@ namespace SimulationSessionSummary_NS
         /// <param name="e"></param>
         protected void HandleWeaponDetonated(object sender, EventArgs e)
         {
-            // attach this event handler with
-            _mission.WeaponDetonation += HandleWeaponDetonated;
             try
             {
                 // interpret the event args as a weaopn detonation event and get more information about 
@@ -148,10 +144,10 @@ namespace SimulationSessionSummary_NS
             catch (Exception ex)
             {
                 Debug.WriteLine(ex.Message);
-
+                Debug.WriteLine("3");
 
                 // to log in the error log:
-                //_mission.Logger.ErrorMessage(ex);
+                _mission.Logger.ErrorMessage(ex);
             }
         }
 
@@ -191,7 +187,7 @@ namespace SimulationSessionSummary_NS
             catch (Exception ex)
             {
                 Debug.WriteLine(ex.Message);
-
+                Debug.WriteLine("HandleEntityPropertyChanges");
                 // to log in the error log:
                 //_mission.Logger.ErrorMessage(ex);
             }
@@ -216,7 +212,6 @@ namespace SimulationSessionSummary_NS
             catch (Exception ex)
             {
                 Debug.WriteLine(ex.Message);
-
                 // to log in the error log:
                 //_mission.Logger.ErrorMessage(ex);
             }
@@ -312,7 +307,6 @@ namespace SimulationSessionSummary_NS
         /// </summary>
         private void SimulationSessionSummaryForm_Load(object sender, EventArgs e)
         {
-            System.Diagnostics.Debug.WriteLine("Test");
             try
             {
                 // Set the initial MACE Mission state
@@ -333,9 +327,9 @@ namespace SimulationSessionSummary_NS
 
                 //_mission.PlatformMotionComplete += HandlePlatformMotionComplete;
                 //note(anthony) NOTEWORTHY BELOW EVENTS LOOK INTO THEM IN THE FUTURE!
-                //_mission.WeaponDetonation += HandleWeaponDetonated;
-                //_mission.WeaponFire += HandleWeaponFire;
-                //_mission.WeaponDamage += HandleWeaponDamage;
+                _mission.WeaponDetonation += HandleWeaponDetonated;
+                _mission.WeaponFire += HandleWeaponFire;
+                _mission.WeaponDamage += HandleWeaponDamage;
                 //_mission.Map.DrawingComplete += HandleMapDrawComplete;
 
             }
@@ -351,7 +345,6 @@ namespace SimulationSessionSummary_NS
         /// </summary>
         private void SimulationSessionSummaryForm_FormClosing(object sender, System.Windows.Forms.FormClosingEventArgs e)
         {
-
             try
             {
                 // Remove the handlers
