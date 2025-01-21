@@ -39,6 +39,7 @@ namespace SimulationSessionSummary_NS
             this.createNewEntityToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dgvUserSelectedEntities = new System.Windows.Forms.DataGridView();
             this.btnAddMapEntity = new System.Windows.Forms.Button();
+            this.start_button = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvUserSelectedEntities)).BeginInit();
@@ -148,11 +149,22 @@ namespace SimulationSessionSummary_NS
             this.btnAddMapEntity.UseVisualStyleBackColor = true;
             this.btnAddMapEntity.Click += new System.EventHandler(this.btnAddMapEntity_Click);
             // 
+            // start_button
+            // 
+            this.start_button.Location = new System.Drawing.Point(202, 4);
+            this.start_button.Name = "start_button";
+            this.start_button.Size = new System.Drawing.Size(75, 23);
+            this.start_button.TabIndex = 16;
+            this.start_button.Text = "Start";
+            this.start_button.UseVisualStyleBackColor = true;
+            this.start_button.Click += new System.EventHandler(this.start_button_Click);
+            // 
             // SimulationSessionSummaryForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(506, 303);
+            this.Controls.Add(this.start_button);
             this.Controls.Add(this.btnAddMapEntity);
             this.Controls.Add(this.dgvUserSelectedEntities);
             this.Controls.Add(this.groupBox1);
@@ -182,5 +194,6 @@ namespace SimulationSessionSummary_NS
         private System.Windows.Forms.ToolStripMenuItem createNewEntityToolStripMenuItem;
         private System.Windows.Forms.DataGridView dgvUserSelectedEntities;
         private System.Windows.Forms.Button btnAddMapEntity;
+        private System.Windows.Forms.Button start_button;
     }
 }

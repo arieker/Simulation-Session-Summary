@@ -32,6 +32,7 @@ namespace SimulationSessionSummary_NS
         private SimulationSessionSummary _plugin;
         private SortableBindingList<PhysicalEntityWrapper> _userSelectedEntities = new SortableBindingList<PhysicalEntityWrapper>();
         private List<IPhysicalEntity> ourEntityList = new List<IPhysicalEntity>();
+        private List<PlatformObject> platformObjects = new List<PlatformObject>();
 
         /// <summary>
         /// Local reference to the plugin class -- used for window configuration save/restore
@@ -503,6 +504,18 @@ namespace SimulationSessionSummary_NS
             catch (Exception ex)
             {
                 _mission.Logger.ErrorMessage(ex);
+            }
+        }
+
+        private void start_button_Click(object sender, EventArgs e)
+        {
+            foreach (KeyValuePair<ulong, IPhysicalEntity>  kvp in _mission.PhysicalEntities) {
+                var newEntity = kvp.Value;
+
+                PlatformObject newObject = new PlatformObject(newEntity.Name, newEntity.Type, (int)newEntity.TeamAffiliation, (int)newEntity.Domain); 
+
+                platformObjects.Add(newObject);
+                
             }
         }
     }

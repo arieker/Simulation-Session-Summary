@@ -55,6 +55,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="PlatformObject.cs" />
     <Compile Include="SimulationSessionSummary.cs" />
     <Compile Include="SimulationSessionSummaryForm.cs">
       <SubType>Form</SubType>
