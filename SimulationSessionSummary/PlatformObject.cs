@@ -12,13 +12,15 @@ namespace SimulationSessionSummary_NS
         public string Type { get; set; }
         public int Team { get; set; }
         public int Domain { get; set; }
+        public List<int> weaponObjects { get; set; }
 
-        public PlatformObject(string name, string type, int team, int domain)
+        public PlatformObject(string name, string type, int team, int domain, List<int> weaponObjects)
         {
             Name = name;
             Type = type;
             Team = team;
             Domain = domain;
+            this.weaponObjects = weaponObjects;
         }
     }
 }

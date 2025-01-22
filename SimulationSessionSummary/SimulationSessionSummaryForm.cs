@@ -39,6 +39,33 @@ namespace SimulationSessionSummary_NS
         /// </summary>
         #endregion
 
+        #region "DIS Type Key"
+        /*
+         * DIS entity type representation
+         * Order of fields
+         * Kind, Domain, Country, Category, SubCategory, Specific, Extra
+         * Known Values
+         * Kind: 1 = Platforms (planes, vehicles, ships)
+         *       2 = Munitions (bullets, bombs, rockets, missles)
+         *       3 = Lifeforms (Humans and animals)
+         *       5 = Cultural (buildings, trees, other entities in cultural tab of mission builder)
+         *       
+         * Domain: 1 = Land
+         *         2 = Air
+         *         3 = Water (surface)
+         *         4 = Water (undersurface)
+         *         5 = Space
+         * 
+         * Country: Isn't important but USA is 225
+         * Category: Unsure if imporant but can look into if needed
+         * SubCategory: Most likely not needed
+         * Specific: Hopefully not needed
+         * Extra: Definitly not needed
+         * 
+         * There are Platform filters but there are 40 with at least half being important
+         */
+        #endregion
+
         #region "Instance Management"
 
         /// <summary>
@@ -512,7 +539,9 @@ namespace SimulationSessionSummary_NS
             foreach (KeyValuePair<ulong, IPhysicalEntity>  kvp in _mission.PhysicalEntities) {
                 var newEntity = kvp.Value;
 
-                PlatformObject newObject = new PlatformObject(newEntity.Name, newEntity.Type, (int)newEntity.TeamAffiliation, (int)newEntity.Domain); 
+                List<int> weaponObjects = new List<int>(newEntity.Weapons.Count);
+
+                PlatformObject newObject = new PlatformObject(newEntity.Name, newEntity.Type, (int)newEntity.TeamAffiliation, (int)newEntity.Domain, weaponObjects); 
 
                 platformObjects.Add(newObject);
                 
