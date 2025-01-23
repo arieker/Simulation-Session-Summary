@@ -18,17 +18,17 @@ namespace SimulationSessionSummary_NS
         public bool Detonated { get; set; }
         public bool Hit { get; set; }
 
-        public WeaponObject(string name, string type, string ownshipName, string targetName, string instanceID, string targetLat, string targetLon, bool detonated, bool hit)
+        public WeaponObject(string name, string ownshipName, string instanceID)
         {
             Name = name;
-            Type = type;
+            //Type = type;
             OwnshipName = ownshipName;
-            TargetName = targetName;
+            //TargetName = targetName;
             InstanceID = instanceID;
-            TargetLat = targetLat;
-            TargetLon = targetLon;
-            Detonated = detonated;
-            Hit = hit;
+            //TargetLat = targetLat;
+            //TargetLon = targetLon;
+            //Detonated = detonated;
+            //Hit = hit;
         }
         /*
         public override string ToString()

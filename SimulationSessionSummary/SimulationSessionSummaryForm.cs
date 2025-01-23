@@ -1,5 +1,6 @@
 using BSI.MACE;
 using BSI.MACE.AI;
+using BSI.MACE.Equipment;
 using BSI.MACE.PlugInNS;
 using BSI.SignalGenerator;
 using BSI.SimulationLibrary;
@@ -538,12 +539,22 @@ namespace SimulationSessionSummary_NS
         {
             foreach (KeyValuePair<ulong, IPhysicalEntity>  kvp in _mission.PhysicalEntities) {
                 var newEntity = kvp.Value;
+                List<WeaponObject> weaponObjects = new List<WeaponObject>();
 
-                List<int> weaponObjects = new List<int>(newEntity.Weapons.Count);
+                if (newEntity.EntityType.Kind.ToString() == "1" || newEntity.EntityType.Kind.ToString() == "3")
+                {
+                    if (newEntity.Weapons != null)
+                    {
+                        foreach (IEquipment weaponObject in newEntity.EquipmentList) { 
+                            WeaponObject weapon = new WeaponObject(weaponObject.Name, weaponObject.Ownship.Name, weaponObject.WeaponSystemID.ToString());  
+                        }
+                    }
 
-                PlatformObject newObject = new PlatformObject(newEntity.Name, newEntity.Type, (int)newEntity.TeamAffiliation, (int)newEntity.Domain, weaponObjects); 
+                    PlatformObject newObject = new PlatformObject(newEntity.Name, newEntity.Type, (int)newEntity.TeamAffiliation, newEntity.Domain.ToString(), weaponObjects);
+                    platformObjects.Add(newObject);                   
+                }
 
-                platformObjects.Add(newObject);
+ 
                 
             }
         }
