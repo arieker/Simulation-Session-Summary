@@ -13,6 +13,7 @@ namespace SimulationSessionSummary_NS
         public int Team { get; set; }
         public string Domain { get; set; }
         public bool Alive { get; set; }
+        public int Kills { get; set; }
         public List<WeaponObject> weaponObjects { get; set; }
 
         public PlatformObject(string name, string type, int team, string domain, List<WeaponObject> weaponObjects)
