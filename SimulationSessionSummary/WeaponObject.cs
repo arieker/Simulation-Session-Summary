@@ -15,13 +15,15 @@ namespace SimulationSessionSummary_NS
         public string InstanceID { get; set; }
         public string TargetLat { get; set; }
         public string TargetLon { get; set; }
-        public bool Detonated { get; set; }
+        public bool Fired { get; set; }
         public bool Hit { get; set; }
+        public bool Detonated { get; set; }
+        public bool ResultedInKill { get; set; }
 
-        public WeaponObject(string name, string ownshipName, string instanceID)
+        public WeaponObject(string name, string type, string ownshipName, string instanceID)
         {
             Name = name;
-            //Type = type;
+            Type = type;
             OwnshipName = ownshipName;
             //TargetName = targetName;
             InstanceID = instanceID;
@@ -30,10 +32,5 @@ namespace SimulationSessionSummary_NS
             //Detonated = detonated;
             //Hit = hit;
         }
-        /*
-        public override string ToString()
-        {
-            return $"Name: {Name}, OwnshipName: {OwnshipName}, TargetName: {TargetName}, InstanceID: {InstanceID}, TargetLat: {TargetLat}, TargetLon: {TargetLon}, Hit: {Hit}";
-        }*/
     }
 }

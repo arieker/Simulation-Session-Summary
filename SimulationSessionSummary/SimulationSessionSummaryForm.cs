@@ -546,7 +546,7 @@ namespace SimulationSessionSummary_NS
                     if (newEntity.Weapons != null)
                     {
                         foreach (IEquipment weaponObject in newEntity.EquipmentList) { 
-                            WeaponObject weapon = new WeaponObject(weaponObject.Name, weaponObject.Ownship.Name, weaponObject.WeaponSystemID.ToString());  
+                            WeaponObject weapon = new WeaponObject(weaponObject.Name, weaponObject.Ownship.Name, weaponObject.WeaponSystemID.ToString());
                         }
                     }
 
