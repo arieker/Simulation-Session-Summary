@@ -197,6 +197,7 @@ namespace SimulationSessionSummary_NS
                 WeaponObject OurWeaponObject = FindWeaponFromWeaponID(me.ID);
 
                 OurWeaponObject.Fired = true;
+                OurWeaponObject.TargetName = me.TargetAssigned.Name;
                 OurWeaponObject.TargetLat = me.TargetLocationAssigned.Latitude_degrees;
                 OurWeaponObject.TargetLon = me.TargetLocationAssigned.Longitude_degrees;
             }
