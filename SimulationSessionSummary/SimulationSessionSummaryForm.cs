@@ -583,9 +583,8 @@ namespace SimulationSessionSummary_NS
                     PlatformObject newObject = new PlatformObject(newEntity.Name, newEntity.Type, (int)newEntity.TeamAffiliation, newEntity.Domain.ToString(), weaponObjects);
                     platformObjects.Add(newObject);                   
                 }
-
-                updateMainStatistics();
             }
+            updateMainStatistics();
         }
 
         private void buttonSaveXML_Click(object sender, EventArgs e)
