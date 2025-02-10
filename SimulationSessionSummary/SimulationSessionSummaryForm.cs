@@ -154,8 +154,8 @@ namespace SimulationSessionSummary_NS
             labelBlueTeamAliveEntities.Text = GetTeamAlivePlatforms(1).ToString();
             labelBlueTeamRemainingWeapons.Text = GetTeamRemainingWeaponCount(1).ToString();
 
-            labelRedTeamAliveEntities.Text = GetTeamAlivePlatforms(0).ToString();
-            labelRedTeamRemainingWeapons.Text = GetTeamRemainingWeaponCount(0).ToString();
+            labelRedTeamAliveEntities.Text = GetTeamAlivePlatforms(2).ToString();
+            labelRedTeamRemainingWeapons.Text = GetTeamRemainingWeaponCount(2).ToString();
 
             // temp cuz i dont want to make more winforms elements right now
             // maybe can just make EVEN MORE helper functions to do the percentages :)
@@ -163,12 +163,12 @@ namespace SimulationSessionSummary_NS
             Debug.WriteLine("Blue Team Remaining Forces as a %:");
             Debug.WriteLine(GetTeamDeadPlatforms(1) / GetTeamAllPlatformsList(1).Count() * 100);
             Debug.WriteLine("Red Team Remaining Forces as a %:");
-            Debug.WriteLine(GetTeamDeadPlatforms(0) / GetTeamAllPlatformsList(0).Count() * 100);
+            Debug.WriteLine(GetTeamDeadPlatforms(2) / GetTeamAllPlatformsList(2).Count() * 100);
 
             Debug.WriteLine("Blue Team Remaining Weapons as a %:");
             Debug.WriteLine(GetTeamRemainingWeaponCount(1) / GetTeamAllWeaponsList(1).Count * 100);
             Debug.WriteLine("Red Team Remaining Weapons as a %:");
-            Debug.WriteLine(GetTeamRemainingWeaponCount(0) / GetTeamAllWeaponsList(0).Count * 100);
+            Debug.WriteLine(GetTeamRemainingWeaponCount(2) / GetTeamAllWeaponsList(2).Count * 100);
         }
         #endregion
 
