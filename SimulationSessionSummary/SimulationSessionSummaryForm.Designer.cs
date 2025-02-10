@@ -125,7 +125,7 @@ namespace SimulationSessionSummary_NS
             // 
             // start_button
             // 
-            this.start_button.Location = new System.Drawing.Point(202, 4);
+            this.start_button.Location = new System.Drawing.Point(12, 115);
             this.start_button.Name = "start_button";
             this.start_button.Size = new System.Drawing.Size(75, 23);
             this.start_button.TabIndex = 16;
@@ -135,7 +135,7 @@ namespace SimulationSessionSummary_NS
             // 
             // buttonSaveXML
             // 
-            this.buttonSaveXML.Location = new System.Drawing.Point(13, 116);
+            this.buttonSaveXML.Location = new System.Drawing.Point(93, 115);
             this.buttonSaveXML.Name = "buttonSaveXML";
             this.buttonSaveXML.Size = new System.Drawing.Size(75, 23);
             this.buttonSaveXML.TabIndex = 17;
