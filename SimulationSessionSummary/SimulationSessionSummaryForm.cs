@@ -161,9 +161,9 @@ namespace SimulationSessionSummary_NS
             // maybe can just make EVEN MORE helper functions to do the percentages :)
             // percentage of remaining forces (MVP)
             Debug.WriteLine("Blue Team Remaining Forces as a %:");
-            Debug.WriteLine(GetTeamDeadPlatforms(1) / GetTeamAllPlatformsList(1).Count() * 100);
+            Debug.WriteLine(GetTeamAlivePlatforms(1) / GetTeamAllPlatformsList(1).Count() * 100);
             Debug.WriteLine("Red Team Remaining Forces as a %:");
-            Debug.WriteLine(GetTeamDeadPlatforms(2) / GetTeamAllPlatformsList(2).Count() * 100);
+            Debug.WriteLine(GetTeamAlivePlatforms(2) / GetTeamAllPlatformsList(2).Count() * 100);
 
             Debug.WriteLine("Blue Team Remaining Weapons as a %:");
             Debug.WriteLine(GetTeamRemainingWeaponCount(1) / GetTeamAllWeaponsList(1).Count * 100);
