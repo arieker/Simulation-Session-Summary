@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SimulationSessionSummary_NS
 {
@@ -13,8 +10,14 @@ namespace SimulationSessionSummary_NS
         public int Team { get; set; }
         public string Domain { get; set; }
         public bool Alive { get; set; }
-        public int Kills { get; set; }
+        public int Kills => weaponObjects.Count(w => w.ResultedInKill); // updates automatically
         public List<WeaponObject> weaponObjects { get; set; }
+
+        // Parameterless constructor (required for serialization)
+        public PlatformObject()
+        {
+            weaponObjects = new List<WeaponObject>();
+        }
 
         public PlatformObject(string name, string type, int team, string domain, List<WeaponObject> weaponObjects)
         {
@@ -23,6 +26,7 @@ namespace SimulationSessionSummary_NS
             Team = team;
             Domain = domain;
             this.weaponObjects = weaponObjects;
+            Alive = true;
         }
     }
 }

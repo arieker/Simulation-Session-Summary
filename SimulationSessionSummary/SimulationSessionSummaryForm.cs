@@ -12,11 +12,13 @@ using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml.Serialization;
 
 namespace SimulationSessionSummary_NS
 {
@@ -96,11 +98,22 @@ namespace SimulationSessionSummary_NS
         {
             _plugin = (SimulationSessionSummary)plugin;
             _mission = mission;
-            dgvUserSelectedEntities.DataSource = _userSelectedEntities;
+            //dgvUserSelectedEntities.DataSource = _userSelectedEntities;
 
             // add this form instance to the window config controller as a managed form
             _plugin.WindowConfigController.AddManagedForm(this);
         }
+
+        #endregion
+
+        #region "Our Helper Functions"
+        // These are extremely simple, and really aren't necessary, but it'd just make our code cleaner if we need them
+        private PlatformObject FindPlatformFromName(string name) =>
+            platformObjects.FirstOrDefault(p => p.Name == name);
+        private PlatformObject FindPlatformFromWeaponID(ulong weaponID) =>
+            platformObjects.FirstOrDefault(p => p.weaponObjects.Any(w => w.InstanceID == weaponID));
+        private WeaponObject FindWeaponFromWeaponID(ulong weaponID) =>
+            platformObjects.SelectMany(p => p.weaponObjects).FirstOrDefault(w => w.InstanceID == weaponID);
 
         #endregion
 
@@ -115,13 +128,15 @@ namespace SimulationSessionSummary_NS
         {
             try
             {
-                // get more information about the fire event
                 IMission.WeaponFireEventArgs args = e as IMission.WeaponFireEventArgs;
-                //note(anthony): THESE TWO THINGS ARE BASICALLY EXACTLY!! WHAT WE NEED!
                 IPhysicalEntity fe = args.FiringEntity;
                 IPhysicalEntity me = args.MunitionEntity;
-                //note(anthony): find out which plane fired this weapon (check the name of the ownship and reference this with our general list of all planes)
-                // once we find which plane fired it, create a WeaponObject and add it to that planes list of weaponobjects
+                PlatformObject OurFiringEntity = FindPlatformFromName(fe.Name);
+                WeaponObject OurWeaponObject = FindWeaponFromWeaponID(me.ID);
+
+                OurWeaponObject.Fired = true;
+                OurWeaponObject.TargetLat = me.TargetLocationAssigned.Latitude_degrees;
+                OurWeaponObject.TargetLon = me.TargetLocationAssigned.Longitude_degrees;
             }
             catch (Exception ex)
             {
@@ -142,9 +157,22 @@ namespace SimulationSessionSummary_NS
             try
             {
                 IMission.WeaponDamageEventArgs args = e as IMission.WeaponDamageEventArgs;
-                IPhysicalEntity target = args.TargetEntity;
-                IPhysicalEntity weapon = args.MunitionEntity;
-                Double damage_percent = args.DamagePercent;
+                IPhysicalEntity te = args.TargetEntity;
+                IPhysicalEntity me = args.MunitionEntity;
+                Double damage_percent = args.DamagePercent; // 0-1 so 50% is 0.5
+                PlatformObject OurTargetEntity = FindPlatformFromName(te.Name);
+                WeaponObject OurWeaponObject = FindWeaponFromWeaponID(me.ID);
+
+                OurWeaponObject.Hit = true;
+                if (te.Health <= 0)
+                {
+                    OurTargetEntity.Alive = false;
+                    OurWeaponObject.ResultedInKill = false;
+                }
+                else
+                {
+                    OurWeaponObject.ResultedInKill = false;
+                }
             }
             catch (Exception ex)
             {
@@ -165,16 +193,27 @@ namespace SimulationSessionSummary_NS
         {
             try
             {
-                // interpret the event args as a weapon detonation event and get more information about 
-                // the type of weapon that detonated.
-
+                // note(anthony): this is called after HandleWeaponDamage, or completely on its own if the weapon resulted in zero damage
                 IMission.WeaponDetonationEventArgs args = e as IMission.WeaponDetonationEventArgs;
-                IPhysicalEntity weap = args.MunitionEntity;
+                IPhysicalEntity me = args.MunitionEntity;
+                WeaponObject OurWeaponObject = FindWeaponFromWeaponID(me.ID);
+
+                OurWeaponObject.Detonated = true;
+                if (OurWeaponObject.Hit)
+                {
+                    return; // note(anthony): This means it's already gone through HandleWeaponDamage
+                }
+                else
+                {
+                    // note(anthony): based on above comment we can deduce that this did NOT result in a hit on an entity, unless their target was nothing (??)
+                    OurWeaponObject.Hit = false;
+                    // note(anthony): in the future, possibly we could see if it hits within the geographic area of its target lon/lat
+                }
             }
             catch (Exception ex)
             {
                 Debug.WriteLine(ex.Message);
-                Debug.WriteLine("3");
+                Debug.WriteLine("HandleWeaponDetonated");
 
                 // to log in the error log:
                 _mission.Logger.ErrorMessage(ex);
@@ -508,7 +547,6 @@ namespace SimulationSessionSummary_NS
         {
             try
             {
-
                 IMap.MouseEventArgs args = (IMap.MouseEventArgs)e;
                 if (args.MouseEventArgs.Button == MouseButtons.Left)
                 {
@@ -537,7 +575,11 @@ namespace SimulationSessionSummary_NS
 
         private void start_button_Click(object sender, EventArgs e)
         {
-            foreach (KeyValuePair<ulong, IPhysicalEntity>  kvp in _mission.PhysicalEntities) {
+            // note(anthony): don't click this button when there are missiles active since those will be added as platforms which is obviously not going to play nice
+            start_button.Enabled = false;
+
+            foreach (KeyValuePair<ulong, IPhysicalEntity>  kvp in _mission.PhysicalEntities)
+            {
                 var newEntity = kvp.Value;
                 List<WeaponObject> weaponObjects = new List<WeaponObject>();
 
@@ -545,8 +587,12 @@ namespace SimulationSessionSummary_NS
                 {
                     if (newEntity.Weapons != null)
                     {
-                        foreach (IEquipment weaponObject in newEntity.EquipmentList) { 
-                            WeaponObject weapon = new WeaponObject(weaponObject.Name, weaponObject.Ownship.Name, weaponObject.WeaponSystemID.ToString());
+                        foreach (IWeaponModel weaponObject in newEntity.Weapons)
+                        {
+                            // note(anthony): Maybe we can use a dictionary amraam = missile etc for the type instead of placeholder
+                            WeaponObject weapon = new WeaponObject(weaponObject.Type, "Placeholder Type", weaponObject.ParentEntity.Name, weaponObject.ID);
+                            weaponObjects.Add(weapon);
+                            
                         }
                     }
 
@@ -555,8 +601,37 @@ namespace SimulationSessionSummary_NS
                 }
 
  
-                
+                 
             }
         }
+
+        private void buttonSaveXML_Click(object sender, EventArgs e)
+        {
+            using (SaveFileDialog saveFileDialog = new SaveFileDialog())
+            {
+                saveFileDialog.Filter = "XML Files (*.xml)|*.xml";
+                saveFileDialog.Title = "Save Platform Objects";
+                saveFileDialog.FileName = "platformObjects.xml";
+
+                if (saveFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    try
+                    {
+                        XmlSerializer serializer = new XmlSerializer(typeof(List<PlatformObject>));
+                        using (TextWriter writer = new StreamWriter(saveFileDialog.FileName))
+                        {
+                            serializer.Serialize(writer, platformObjects);
+                        }
+
+                        MessageBox.Show("File saved successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Error saving file: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+            }
+        }
+
     }
 }

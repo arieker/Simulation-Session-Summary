@@ -37,12 +37,10 @@ namespace SimulationSessionSummary_NS
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.entitiesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.createNewEntityToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.dgvUserSelectedEntities = new System.Windows.Forms.DataGridView();
-            this.btnAddMapEntity = new System.Windows.Forms.Button();
             this.start_button = new System.Windows.Forms.Button();
+            this.buttonSaveXML = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvUserSelectedEntities)).BeginInit();
             this.SuspendLayout();
             // 
             // EntityCount_Label
@@ -125,30 +123,6 @@ namespace SimulationSessionSummary_NS
             this.createNewEntityToolStripMenuItem.Text = "Create New Entity";
             this.createNewEntityToolStripMenuItem.Click += new System.EventHandler(this.btnCreateEntity_Click);
             // 
-            // dgvUserSelectedEntities
-            // 
-            this.dgvUserSelectedEntities.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.dgvUserSelectedEntities.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            this.dgvUserSelectedEntities.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvUserSelectedEntities.Location = new System.Drawing.Point(13, 149);
-            this.dgvUserSelectedEntities.Name = "dgvUserSelectedEntities";
-            this.dgvUserSelectedEntities.Size = new System.Drawing.Size(475, 137);
-            this.dgvUserSelectedEntities.TabIndex = 14;
-            // 
-            // btnAddMapEntity
-            // 
-            this.btnAddMapEntity.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnAddMapEntity.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnAddMapEntity.Location = new System.Drawing.Point(457, 115);
-            this.btnAddMapEntity.Name = "btnAddMapEntity";
-            this.btnAddMapEntity.Size = new System.Drawing.Size(31, 28);
-            this.btnAddMapEntity.TabIndex = 15;
-            this.btnAddMapEntity.Text = "+";
-            this.btnAddMapEntity.UseVisualStyleBackColor = true;
-            this.btnAddMapEntity.Click += new System.EventHandler(this.btnAddMapEntity_Click);
-            // 
             // start_button
             // 
             this.start_button.Location = new System.Drawing.Point(202, 4);
@@ -159,14 +133,23 @@ namespace SimulationSessionSummary_NS
             this.start_button.UseVisualStyleBackColor = true;
             this.start_button.Click += new System.EventHandler(this.start_button_Click);
             // 
+            // buttonSaveXML
+            // 
+            this.buttonSaveXML.Location = new System.Drawing.Point(13, 116);
+            this.buttonSaveXML.Name = "buttonSaveXML";
+            this.buttonSaveXML.Size = new System.Drawing.Size(75, 23);
+            this.buttonSaveXML.TabIndex = 17;
+            this.buttonSaveXML.Text = "Save XML";
+            this.buttonSaveXML.UseVisualStyleBackColor = true;
+            this.buttonSaveXML.Click += new System.EventHandler(this.buttonSaveXML_Click);
+            // 
             // SimulationSessionSummaryForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(506, 303);
+            this.Controls.Add(this.buttonSaveXML);
             this.Controls.Add(this.start_button);
-            this.Controls.Add(this.btnAddMapEntity);
-            this.Controls.Add(this.dgvUserSelectedEntities);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
@@ -176,7 +159,6 @@ namespace SimulationSessionSummary_NS
             this.groupBox1.PerformLayout();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvUserSelectedEntities)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -192,8 +174,7 @@ namespace SimulationSessionSummary_NS
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem entitiesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem createNewEntityToolStripMenuItem;
-        private System.Windows.Forms.DataGridView dgvUserSelectedEntities;
-        private System.Windows.Forms.Button btnAddMapEntity;
         private System.Windows.Forms.Button start_button;
+        private System.Windows.Forms.Button buttonSaveXML;
     }
 }

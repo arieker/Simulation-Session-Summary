@@ -88,12 +88,12 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>xcopy "$(TargetDir)$(ProjectName).dll" "C:\Users\Public\Documents\MACE\Plugins" /Y /I
-xcopy "$(TargetDir)$(ProjectName).pdb" "C:\Users\Public\Documents\MACE\Plugins" /Y /I
+    <PostBuildEvent>C:\Windows\System32\xcopy "$(TargetDir)$(ProjectName).dll" "C:\Users\Public\Documents\MACE\Plugins" /Y /I
+C:\Windows\System32\xcopy "$(TargetDir)$(ProjectName).pdb" "C:\Users\Public\Documents\MACE\Plugins" /Y /I
 rem use the following line to copy any plugin specific dependencies from the build 
 rem folder to the correct path. this path should match the assembly binding path
 rem specified in AssemblyInfo.cs
-rem xcopy "$(TargetDir)SomeDependencyName.dll" "C:\Users\Public\Documents\MACE\Plugins\$(ProjectName)" /Y /I
+rem C:\Windows\System32\xcopy "$(TargetDir)SomeDependencyName.dll" "C:\Users\Public\Documents\MACE\Plugins\$(ProjectName)" /Y /I
 
 </PostBuildEvent>
   </PropertyGroup>
