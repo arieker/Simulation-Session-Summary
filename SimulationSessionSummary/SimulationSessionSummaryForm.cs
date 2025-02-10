@@ -106,42 +106,49 @@ namespace SimulationSessionSummary_NS
         #endregion
 
         #region "Our Helper Functions"
-        // These are extremely simple, and really aren't necessary, but it'd just make our code cleaner if we need them
+        // These are extremely simple, and really aren't necessary and honestly redundant, 
+        // but it makes the code SO clean that I don't care how inefficient or dumb it is.
+
         private PlatformObject FindPlatformFromName(string name) =>
             platformObjects.FirstOrDefault(p => p.Name == name);
+
         private PlatformObject FindPlatformFromWeaponID(ulong weaponID) =>
             platformObjects.FirstOrDefault(p => p.weaponObjects.Any(w => w.InstanceID == weaponID));
+
         private WeaponObject FindWeaponFromWeaponID(ulong weaponID) =>
             platformObjects.SelectMany(p => p.weaponObjects).FirstOrDefault(w => w.InstanceID == weaponID);
-        // For the next 4, technically only two are needed, one of each, but I don't really care
-        // This entire approach could also arguably be better by having vars that automatically get updated with these statistics but
-        // honestly this program is so small I don't think this inefficiency matters as long as its abstracted like we are doing here
-        private int GetTeamRemainingWeaponCount(int team)
-        {
-            return platformObjects
-                .Where(p => p.Team == team)
-                .SelectMany(p => p.weaponObjects)
-                .Count(w => !w.Fired);
-        }
-        private int GetTeamExpendedWeaponCount(int team)
-        {
-            return platformObjects
-                .Where(p => p.Team == team)
-                .SelectMany(p => p.weaponObjects)
-                .Count(w => w.Fired);
-        }
-        private int GetTeamAlivePlatforms(int team)
-        {
-            return platformObjects.Count(p => p.Team == team && p.Alive);
-        }
-        private int GetTeamDeadPlatforms(int team)
-        {
-            return platformObjects.Count(p => p.Team == team && !p.Alive);
-        }
+
+        private List<WeaponObject> GetTeamAllWeaponsList(int team) =>
+            platformObjects.Where(p => p.Team == team)
+                           .SelectMany(p => p.weaponObjects)
+                           .ToList();
+
+        private int GetTeamRemainingWeaponCount(int team) =>
+            platformObjects.Where(p => p.Team == team)
+                           .SelectMany(p => p.weaponObjects)
+                           .Count(w => !w.Fired);
+
+        private int GetTeamExpendedWeaponCount(int team) =>
+            platformObjects.Where(p => p.Team == team)
+                           .SelectMany(p => p.weaponObjects)
+                           .Count(w => w.Fired);
+
+        private List<PlatformObject> GetTeamAllPlatformsList(int team) =>
+            platformObjects.Where(p => p.Team == team).ToList();
+
+        private int GetTeamAlivePlatforms(int team) =>
+            platformObjects.Count(p => p.Team == team && p.Alive);
+
+
+        private int GetTeamDeadPlatforms(int team) =>
+            platformObjects.Count(p => p.Team == team && !p.Alive);
+
         #endregion
+
 
         #region "Our UI Functions"
         // These are related to refreshing or handling UI things and are necessary
+        // In the future when we start adding dataGridViews and such these could likely just be updated to be .Length/.Count calls of the dataGridViews for these respective things
         private void updateMainStatistics()
         {
             labelBlueTeamAliveEntities.Text = GetTeamAlivePlatforms(1).ToString();
@@ -149,6 +156,19 @@ namespace SimulationSessionSummary_NS
 
             labelRedTeamAliveEntities.Text = GetTeamAlivePlatforms(0).ToString();
             labelRedTeamRemainingWeapons.Text = GetTeamRemainingWeaponCount(0).ToString();
+
+            // temp cuz i dont want to make more winforms elements right now
+            // maybe can just make EVEN MORE helper functions to do the percentages :)
+            // percentage of remaining forces (MVP)
+            Debug.WriteLine("Blue Team Remaining Forces as a %:");
+            Debug.WriteLine(GetTeamDeadPlatforms(1) / GetTeamAllPlatformsList(1).Count() * 100);
+            Debug.WriteLine("Red Team Remaining Forces as a %:");
+            Debug.WriteLine(GetTeamDeadPlatforms(0) / GetTeamAllPlatformsList(0).Count() * 100);
+
+            Debug.WriteLine("Blue Team Remaining Weapons as a %:");
+            Debug.WriteLine(GetTeamRemainingWeaponCount(1) / GetTeamAllWeaponsList(1).Count * 100);
+            Debug.WriteLine("Red Team Remaining Weapons as a %:");
+            Debug.WriteLine(GetTeamRemainingWeaponCount(0) / GetTeamAllWeaponsList(0).Count * 100);
         }
         #endregion
 
@@ -203,10 +223,6 @@ namespace SimulationSessionSummary_NS
                 {
                     OurTargetEntity.Alive = false;
                     OurWeaponObject.ResultedInKill = true;
-                }
-                else
-                {
-                    OurWeaponObject.ResultedInKill = false;
                 }
             }
             catch (Exception ex)
