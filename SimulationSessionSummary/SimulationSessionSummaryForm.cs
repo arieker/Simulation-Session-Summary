@@ -34,7 +34,6 @@ namespace SimulationSessionSummary_NS
         private IMission _mission;
         private SimulationSessionSummary _plugin;
         private SortableBindingList<PhysicalEntityWrapper> _userSelectedEntities = new SortableBindingList<PhysicalEntityWrapper>();
-        private List<IPhysicalEntity> ourEntityList = new List<IPhysicalEntity>();
         private List<PlatformObject> platformObjects = new List<PlatformObject>();
 
         /// <summary>
@@ -114,7 +113,43 @@ namespace SimulationSessionSummary_NS
             platformObjects.FirstOrDefault(p => p.weaponObjects.Any(w => w.InstanceID == weaponID));
         private WeaponObject FindWeaponFromWeaponID(ulong weaponID) =>
             platformObjects.SelectMany(p => p.weaponObjects).FirstOrDefault(w => w.InstanceID == weaponID);
+        // For the next 4, technically only two are needed, one of each, but I don't really care
+        // This entire approach could also arguably be better by having vars that automatically get updated with these statistics but
+        // honestly this program is so small I don't think this inefficiency matters as long as its abstracted like we are doing here
+        private int GetTeamRemainingWeaponCount(int team)
+        {
+            return platformObjects
+                .Where(p => p.Team == team)
+                .SelectMany(p => p.weaponObjects)
+                .Count(w => !w.Fired);
+        }
+        private int GetTeamExpendedWeaponCount(int team)
+        {
+            return platformObjects
+                .Where(p => p.Team == team)
+                .SelectMany(p => p.weaponObjects)
+                .Count(w => w.Fired);
+        }
+        private int GetTeamAlivePlatforms(int team)
+        {
+            return platformObjects.Count(p => p.Team == team && p.Alive);
+        }
+        private int GetTeamDeadPlatforms(int team)
+        {
+            return platformObjects.Count(p => p.Team == team && !p.Alive);
+        }
+        #endregion
 
+        #region "Our UI Functions"
+        // These are related to refreshing or handling UI things and are necessary
+        private void updateMainStatistics()
+        {
+            labelBlueTeamAliveEntities.Text = GetTeamAlivePlatforms(1).ToString();
+            labelBlueTeamRemainingWeapons.Text = GetTeamRemainingWeaponCount(1).ToString();
+
+            labelRedTeamAliveEntities.Text = GetTeamAlivePlatforms(0).ToString();
+            labelRedTeamRemainingWeapons.Text = GetTeamRemainingWeaponCount(0).ToString();
+        }
         #endregion
 
         #region "MACE Event Handlers"
@@ -167,7 +202,7 @@ namespace SimulationSessionSummary_NS
                 if (te.Health <= 0)
                 {
                     OurTargetEntity.Alive = false;
-                    OurWeaponObject.ResultedInKill = false;
+                    OurWeaponObject.ResultedInKill = true;
                 }
                 else
                 {
@@ -199,16 +234,6 @@ namespace SimulationSessionSummary_NS
                 WeaponObject OurWeaponObject = FindWeaponFromWeaponID(me.ID);
 
                 OurWeaponObject.Detonated = true;
-                if (OurWeaponObject.Hit)
-                {
-                    return; // note(anthony): This means it's already gone through HandleWeaponDamage
-                }
-                else
-                {
-                    // note(anthony): based on above comment we can deduce that this did NOT result in a hit on an entity, unless their target was nothing (??)
-                    OurWeaponObject.Hit = false;
-                    // note(anthony): in the future, possibly we could see if it hits within the geographic area of its target lon/lat
-                }
             }
             catch (Exception ex)
             {
@@ -230,19 +255,7 @@ namespace SimulationSessionSummary_NS
         {
             try
             {
-                /* note(anthony): yeah this is actually pointless since ourEntityList seems to be a list of pointers which updates automatically
-                if (sender is IPhysicalEntity entity)
-                {
-                    for (int i = 0; i < ourEntityList.Count; i++)
-                    {
-                        if (ourEntityList[i].ID == entity.ID)
-                        {
-                            ourEntityList[i] = entity; // Update the existing entity
-                            break;
-                        }
-                    }
-                }
-                */
+                updateMainStatistics();
             }
             catch (Exception ex)
             {
@@ -336,52 +349,7 @@ namespace SimulationSessionSummary_NS
         {
             try
             {
-                this.EntityCount_Label.Text = _mission.PhysicalEntities.Count.ToString();
-                //note(anthony): so like, this may be completely useless? if we can just use _mission.PhysicalEntities for everything?? Why make anything custom at all?
-                // we can just keep track of weapon detonation events and do all of our stuff when the mission ends or when a button is pressed in the winform
-                // then we can make all our custom nice formatted lists and display the nice simulation session summary at the end
-                // Removing
-                if (args.Action == NotifyCollectionChangedAction.Remove && args.OldItems != null)
-                {
-                    foreach (KeyValuePair<ulong, IPhysicalEntity> kvp in args.OldItems)
-                    {
-                        var removedEntity = kvp.Value;
-
-                        var ew = _userSelectedEntities.FirstOrDefault(ent => ent.Entity == removedEntity);
-                        if (ew != null)
-                        {
-                            _userSelectedEntities.Remove(ew);
-                            _userSelectedEntities.ResetBindings();
-                        }
-
-                        var entityToRemove = ourEntityList.FirstOrDefault(ent => ent.ID == kvp.Key);
-                        if (entityToRemove != null)
-                        {
-                            ourEntityList.Remove(entityToRemove);
-                        }
-                    }
-                }
-
-                // Adding
-                if (args.Action == NotifyCollectionChangedAction.Add && args.NewItems != null)
-                {
-                    foreach (KeyValuePair<ulong, IPhysicalEntity> kvp in args.NewItems)
-                    {
-                        var newEntity = kvp.Value;
-
-                        // note(anthony): last sanity check to make sure it doesnt exist
-                        if (!ourEntityList.Any(ent => ent.ID == kvp.Key))
-                        {
-                            ourEntityList.Add(newEntity);
-                        }
-                    }
-                }
-
-                // note(anthony): this may not be necessary if we never need to use that event but lets just subscribe to it anyway why not
-                foreach (IPhysicalEntity entity in _mission.PhysicalEntities.Values)
-                {
-                    entity.PropertyChanged += HandleEntityPropertyChanges;
-                }
+                updateMainStatistics();
             }
             catch (Exception ex)
             {
@@ -573,10 +541,10 @@ namespace SimulationSessionSummary_NS
             }
         }
 
-        private void start_button_Click(object sender, EventArgs e)
+        private void buttonStart_Click(object sender, EventArgs e)
         {
             // note(anthony): don't click this button when there are missiles active since those will be added as platforms which is obviously not going to play nice
-            start_button.Enabled = false;
+            buttonStart.Enabled = false;
 
             foreach (KeyValuePair<ulong, IPhysicalEntity>  kvp in _mission.PhysicalEntities)
             {
@@ -600,8 +568,7 @@ namespace SimulationSessionSummary_NS
                     platformObjects.Add(newObject);                   
                 }
 
- 
-                 
+                updateMainStatistics();
             }
         }
 
