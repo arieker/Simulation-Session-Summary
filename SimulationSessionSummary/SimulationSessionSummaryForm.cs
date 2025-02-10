@@ -118,30 +118,28 @@ namespace SimulationSessionSummary_NS
         private WeaponObject FindWeaponFromWeaponID(ulong weaponID) =>
             platformObjects.SelectMany(p => p.weaponObjects).FirstOrDefault(w => w.InstanceID == weaponID);
 
+        // Team related helper functions
+        // Weapons
         private List<WeaponObject> GetTeamAllWeaponsList(int team) =>
             platformObjects.Where(p => p.Team == team)
                            .SelectMany(p => p.weaponObjects)
                            .ToList();
 
-        private int GetTeamRemainingWeaponCount(int team) =>
-            platformObjects.Where(p => p.Team == team)
-                           .SelectMany(p => p.weaponObjects)
-                           .Count(w => !w.Fired);
+        private List<WeaponObject> GetTeamRemainingWeaponsList(int team) =>
+            GetTeamAllWeaponsList(team).Where(w => !w.Fired).ToList();
 
-        private int GetTeamExpendedWeaponCount(int team) =>
-            platformObjects.Where(p => p.Team == team)
-                           .SelectMany(p => p.weaponObjects)
-                           .Count(w => w.Fired);
+        private List<WeaponObject> GetTeamExpendedWeapons(int team) =>
+            GetTeamAllWeaponsList(team).Where(w => w.Fired).ToList();
 
+        // Platforms
         private List<PlatformObject> GetTeamAllPlatformsList(int team) =>
             platformObjects.Where(p => p.Team == team).ToList();
 
-        private int GetTeamAlivePlatforms(int team) =>
-            platformObjects.Count(p => p.Team == team && p.Alive);
+        private List<PlatformObject> GetTeamAlivePlatformsList(int team) =>
+            GetTeamAllPlatformsList(team).Where(p => p.Alive).ToList();
 
-
-        private int GetTeamDeadPlatforms(int team) =>
-            platformObjects.Count(p => p.Team == team && !p.Alive);
+        private List<PlatformObject> GetTeamDeadPlatformsList(int team) =>
+            GetTeamAllPlatformsList(team).Where(p => !p.Alive).ToList();
 
         #endregion
 
@@ -151,25 +149,34 @@ namespace SimulationSessionSummary_NS
         // In the future when we start adding dataGridViews and such these could likely just be updated to be .Length/.Count calls of the dataGridViews for these respective things
         private void updateMainStatistics()
         {
-            labelBlueTeamAliveEntities.Text = GetTeamAlivePlatforms(1).ToString();
-            labelBlueTeamRemainingWeapons.Text = GetTeamRemainingWeaponCount(1).ToString();
+            labelBlueTeamAliveEntities.Text = GetTeamAlivePlatformsList(1).Count.ToString();
+            labelBlueTeamRemainingWeapons.Text = GetTeamRemainingWeaponsList(1).Count.ToString();
 
-            labelRedTeamAliveEntities.Text = GetTeamAlivePlatforms(2).ToString();
-            labelRedTeamRemainingWeapons.Text = GetTeamRemainingWeaponCount(2).ToString();
+            labelRedTeamAliveEntities.Text = GetTeamAlivePlatformsList(2).Count.ToString();
+            labelRedTeamRemainingWeapons.Text = GetTeamRemainingWeaponsList(2).Count.ToString();
 
-            // temp cuz i dont want to make more winforms elements right now
-            // maybe can just make EVEN MORE helper functions to do the percentages :)
-            // percentage of remaining forces (MVP)
+            // TEMPORARY, Honestly, can reuse code later probably, but for now its just temporary cuz i want baseline MVP functionality, although this is just debug writelines so not really MVP
             Debug.WriteLine("Blue Team Remaining Forces as a %:");
-            Debug.WriteLine(GetTeamAlivePlatforms(1) / GetTeamAllPlatformsList(1).Count() * 100);
+            int totalBluePlatforms = GetTeamAllPlatformsList(1).Count;
+            int aliveBluePlatforms = GetTeamAlivePlatformsList(1).Count;
+            Debug.WriteLine(totalBluePlatforms > 0 ? (aliveBluePlatforms / (double)totalBluePlatforms) * 100 : 0);
+
             Debug.WriteLine("Red Team Remaining Forces as a %:");
-            Debug.WriteLine(GetTeamAlivePlatforms(2) / GetTeamAllPlatformsList(2).Count() * 100);
+            int totalRedPlatforms = GetTeamAllPlatformsList(2).Count;
+            int aliveRedPlatforms = GetTeamAlivePlatformsList(2).Count;
+            Debug.WriteLine(totalRedPlatforms > 0 ? (aliveRedPlatforms / (double)totalRedPlatforms) * 100 : 0);
 
             Debug.WriteLine("Blue Team Remaining Weapons as a %:");
-            Debug.WriteLine(GetTeamRemainingWeaponCount(1) / GetTeamAllWeaponsList(1).Count * 100);
+            int totalBlueWeapons = GetTeamAllWeaponsList(1).Count;
+            int remainingBlueWeapons = GetTeamRemainingWeaponsList(1).Count;
+            Debug.WriteLine(totalBlueWeapons > 0 ? (remainingBlueWeapons / (double)totalBlueWeapons) * 100 : 0);
+
             Debug.WriteLine("Red Team Remaining Weapons as a %:");
-            Debug.WriteLine(GetTeamRemainingWeaponCount(2) / GetTeamAllWeaponsList(2).Count * 100);
+            int totalRedWeapons = GetTeamAllWeaponsList(2).Count;
+            int remainingRedWeapons = GetTeamRemainingWeaponsList(2).Count;
+            Debug.WriteLine(totalRedWeapons > 0 ? (remainingRedWeapons / (double)totalRedWeapons) * 100 : 0);
         }
+
         #endregion
 
         #region "MACE Event Handlers"
