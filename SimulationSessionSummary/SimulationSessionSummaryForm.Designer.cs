@@ -48,9 +48,11 @@ namespace SimulationSessionSummary_NS
             this.labelAliveEntities = new System.Windows.Forms.Label();
             this.labelRedTeam = new System.Windows.Forms.Label();
             this.labelBlueTeam = new System.Windows.Forms.Label();
+            this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.groupBox1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.groupBoxMainStatistics.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
             // EntityCount_Label
@@ -103,7 +105,7 @@ namespace SimulationSessionSummary_NS
             this.groupBox1.Controls.Add(this.State_Label);
             this.groupBox1.Location = new System.Drawing.Point(12, 33);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(476, 76);
+            this.groupBox1.Size = new System.Drawing.Size(924, 76);
             this.groupBox1.TabIndex = 12;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Scenario Statistics";
@@ -114,7 +116,7 @@ namespace SimulationSessionSummary_NS
             this.entitiesToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(506, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(954, 24);
             this.menuStrip1.TabIndex = 13;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -242,11 +244,20 @@ namespace SimulationSessionSummary_NS
             this.labelBlueTeam.TabIndex = 0;
             this.labelBlueTeam.Text = "Blue Team";
             // 
+            // dataGridView1
+            // 
+            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView1.Location = new System.Drawing.Point(463, 327);
+            this.dataGridView1.Name = "dataGridView1";
+            this.dataGridView1.Size = new System.Drawing.Size(408, 230);
+            this.dataGridView1.TabIndex = 19;
+            // 
             // SimulationSessionSummaryForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(506, 303);
+            this.ClientSize = new System.Drawing.Size(954, 655);
+            this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.groupBoxMainStatistics);
             this.Controls.Add(this.buttonSaveXML);
             this.Controls.Add(this.buttonStart);
@@ -261,6 +272,7 @@ namespace SimulationSessionSummary_NS
             this.menuStrip1.PerformLayout();
             this.groupBoxMainStatistics.ResumeLayout(false);
             this.groupBoxMainStatistics.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -287,5 +299,6 @@ namespace SimulationSessionSummary_NS
         private System.Windows.Forms.Label labelRemainingWeapons;
         private System.Windows.Forms.Label labelRedTeamAliveEntities;
         private System.Windows.Forms.Label labelBlueTeamAliveEntities;
+        private System.Windows.Forms.DataGridView dataGridView1;
     }
 }

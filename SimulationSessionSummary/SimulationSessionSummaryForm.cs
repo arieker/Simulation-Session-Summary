@@ -149,6 +149,10 @@ namespace SimulationSessionSummary_NS
         // In the future when we start adding dataGridViews and such these could likely just be updated to be .Length/.Count calls of the dataGridViews for these respective things
         private void updateMainStatistics()
         {
+            // note(anthony): THIS IS TEMPORARY!!!! THIS IS JUST TO SHOW DATASOURCE USAGE FOR A DATAGRIDVIEW TO TIM :)
+            dataGridView1.DataSource = platformObjects.ToArray();
+            // :)
+
             labelBlueTeamAliveEntities.Text = GetTeamAlivePlatformsList(1).Count.ToString();
             labelBlueTeamRemainingWeapons.Text = GetTeamRemainingWeaponsList(1).Count.ToString();
 
