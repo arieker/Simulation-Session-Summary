@@ -29,14 +29,14 @@ namespace SimulationSessionSummary_NS
         /// </summary>
         private void InitializeComponent()
         {
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.EntityCount_Label = new System.Windows.Forms.Label();
             this.State_Label = new System.Windows.Forms.Label();
             this.EntityCountText_Label = new System.Windows.Forms.Label();
             this.StateText_Label = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
-            this.entitiesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.createNewEntityToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.buttonStart = new System.Windows.Forms.Button();
             this.buttonSaveXML = new System.Windows.Forms.Button();
             this.groupBoxMainStatistics = new System.Windows.Forms.GroupBox();
@@ -48,9 +48,18 @@ namespace SimulationSessionSummary_NS
             this.labelAliveEntities = new System.Windows.Forms.Label();
             this.labelRedTeam = new System.Windows.Forms.Label();
             this.labelBlueTeam = new System.Windows.Forms.Label();
+            this.tabControl = new System.Windows.Forms.TabControl();
+            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.groupBox1.SuspendLayout();
-            this.menuStrip1.SuspendLayout();
             this.groupBoxMainStatistics.SuspendLayout();
+            this.tabControl.SuspendLayout();
+            this.tabPage2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
+            this.tabPage1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
             // EntityCount_Label
@@ -101,41 +110,16 @@ namespace SimulationSessionSummary_NS
             this.groupBox1.Controls.Add(this.EntityCount_Label);
             this.groupBox1.Controls.Add(this.EntityCountText_Label);
             this.groupBox1.Controls.Add(this.State_Label);
-            this.groupBox1.Location = new System.Drawing.Point(12, 33);
+            this.groupBox1.Location = new System.Drawing.Point(6, 6);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(476, 76);
+            this.groupBox1.Size = new System.Drawing.Size(980, 76);
             this.groupBox1.TabIndex = 12;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Scenario Statistics";
             // 
-            // menuStrip1
-            // 
-            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.entitiesToolStripMenuItem});
-            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
-            this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(506, 24);
-            this.menuStrip1.TabIndex = 13;
-            this.menuStrip1.Text = "menuStrip1";
-            // 
-            // entitiesToolStripMenuItem
-            // 
-            this.entitiesToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.createNewEntityToolStripMenuItem});
-            this.entitiesToolStripMenuItem.Name = "entitiesToolStripMenuItem";
-            this.entitiesToolStripMenuItem.Size = new System.Drawing.Size(57, 20);
-            this.entitiesToolStripMenuItem.Text = "Entities";
-            // 
-            // createNewEntityToolStripMenuItem
-            // 
-            this.createNewEntityToolStripMenuItem.Name = "createNewEntityToolStripMenuItem";
-            this.createNewEntityToolStripMenuItem.Size = new System.Drawing.Size(168, 22);
-            this.createNewEntityToolStripMenuItem.Text = "Create New Entity";
-            this.createNewEntityToolStripMenuItem.Click += new System.EventHandler(this.btnCreateEntity_Click);
-            // 
             // buttonStart
             // 
-            this.buttonStart.Location = new System.Drawing.Point(12, 115);
+            this.buttonStart.Location = new System.Drawing.Point(6, 88);
             this.buttonStart.Name = "buttonStart";
             this.buttonStart.Size = new System.Drawing.Size(75, 23);
             this.buttonStart.TabIndex = 16;
@@ -145,7 +129,7 @@ namespace SimulationSessionSummary_NS
             // 
             // buttonSaveXML
             // 
-            this.buttonSaveXML.Location = new System.Drawing.Point(93, 115);
+            this.buttonSaveXML.Location = new System.Drawing.Point(87, 88);
             this.buttonSaveXML.Name = "buttonSaveXML";
             this.buttonSaveXML.Size = new System.Drawing.Size(75, 23);
             this.buttonSaveXML.TabIndex = 17;
@@ -155,6 +139,7 @@ namespace SimulationSessionSummary_NS
             // 
             // groupBoxMainStatistics
             // 
+            this.groupBoxMainStatistics.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxMainStatistics.Controls.Add(this.labelRedTeamRemainingWeapons);
             this.groupBoxMainStatistics.Controls.Add(this.labelBlueTeamRemainingWeapons);
             this.groupBoxMainStatistics.Controls.Add(this.labelRemainingWeapons);
@@ -163,9 +148,9 @@ namespace SimulationSessionSummary_NS
             this.groupBoxMainStatistics.Controls.Add(this.labelAliveEntities);
             this.groupBoxMainStatistics.Controls.Add(this.labelRedTeam);
             this.groupBoxMainStatistics.Controls.Add(this.labelBlueTeam);
-            this.groupBoxMainStatistics.Location = new System.Drawing.Point(288, 115);
+            this.groupBoxMainStatistics.Location = new System.Drawing.Point(758, 115);
             this.groupBoxMainStatistics.Name = "groupBoxMainStatistics";
-            this.groupBoxMainStatistics.Size = new System.Drawing.Size(200, 176);
+            this.groupBoxMainStatistics.Size = new System.Drawing.Size(228, 176);
             this.groupBoxMainStatistics.TabIndex = 18;
             this.groupBoxMainStatistics.TabStop = false;
             this.groupBoxMainStatistics.Text = "Main Statistics";
@@ -242,27 +227,90 @@ namespace SimulationSessionSummary_NS
             this.labelBlueTeam.TabIndex = 0;
             this.labelBlueTeam.Text = "Blue Team";
             // 
+            // tabControl
+            // 
+            this.tabControl.Controls.Add(this.tabPage2);
+            this.tabControl.Controls.Add(this.tabPage1);
+            this.tabControl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tabControl.Location = new System.Drawing.Point(0, 0);
+            this.tabControl.Name = "tabControl";
+            this.tabControl.SelectedIndex = 0;
+            this.tabControl.Size = new System.Drawing.Size(1002, 444);
+            this.tabControl.TabIndex = 19;
+            // 
+            // tabPage2
+            // 
+            this.tabPage2.Controls.Add(this.chart1);
+            this.tabPage2.Location = new System.Drawing.Point(4, 22);
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage2.Size = new System.Drawing.Size(584, 319);
+            this.tabPage2.TabIndex = 1;
+            this.tabPage2.Text = "Other";
+            this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // chart1
+            // 
+            chartArea2.Name = "ChartArea1";
+            this.chart1.ChartAreas.Add(chartArea2);
+            legend2.Name = "Legend1";
+            this.chart1.Legends.Add(legend2);
+            this.chart1.Location = new System.Drawing.Point(8, 6);
+            this.chart1.Name = "chart1";
+            series2.ChartArea = "ChartArea1";
+            series2.Legend = "Legend1";
+            series2.Name = "Series1";
+            this.chart1.Series.Add(series2);
+            this.chart1.Size = new System.Drawing.Size(300, 300);
+            this.chart1.TabIndex = 0;
+            this.chart1.Text = "chart1";
+            // 
+            // tabPage1
+            // 
+            this.tabPage1.Controls.Add(this.dataGridView1);
+            this.tabPage1.Controls.Add(this.buttonSaveXML);
+            this.tabPage1.Controls.Add(this.buttonStart);
+            this.tabPage1.Controls.Add(this.groupBox1);
+            this.tabPage1.Controls.Add(this.groupBoxMainStatistics);
+            this.tabPage1.Location = new System.Drawing.Point(4, 22);
+            this.tabPage1.Name = "tabPage1";
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage1.Size = new System.Drawing.Size(994, 418);
+            this.tabPage1.TabIndex = 0;
+            this.tabPage1.Text = "Main";
+            this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // dataGridView1
+            // 
+            this.dataGridView1.AllowUserToOrderColumns = true;
+            this.dataGridView1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView1.Location = new System.Drawing.Point(6, 115);
+            this.dataGridView1.Name = "dataGridView1";
+            this.dataGridView1.ReadOnly = true;
+            this.dataGridView1.Size = new System.Drawing.Size(746, 228);
+            this.dataGridView1.TabIndex = 19;
+            this.dataGridView1.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
+            // 
             // SimulationSessionSummaryForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(506, 303);
-            this.Controls.Add(this.groupBoxMainStatistics);
-            this.Controls.Add(this.buttonSaveXML);
-            this.Controls.Add(this.buttonStart);
-            this.Controls.Add(this.groupBox1);
-            this.Controls.Add(this.menuStrip1);
-            this.MainMenuStrip = this.menuStrip1;
+            this.ClientSize = new System.Drawing.Size(1002, 444);
+            this.Controls.Add(this.tabControl);
             this.Name = "SimulationSessionSummaryForm";
             this.Text = "SimulationSessionSummary";
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
-            this.menuStrip1.ResumeLayout(false);
-            this.menuStrip1.PerformLayout();
             this.groupBoxMainStatistics.ResumeLayout(false);
             this.groupBoxMainStatistics.PerformLayout();
+            this.tabControl.ResumeLayout(false);
+            this.tabPage2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.chart1)).EndInit();
+            this.tabPage1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -273,9 +321,6 @@ namespace SimulationSessionSummary_NS
         internal System.Windows.Forms.Label EntityCountText_Label;
         internal System.Windows.Forms.Label StateText_Label;
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.MenuStrip menuStrip1;
-        private System.Windows.Forms.ToolStripMenuItem entitiesToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem createNewEntityToolStripMenuItem;
         private System.Windows.Forms.Button buttonStart;
         private System.Windows.Forms.Button buttonSaveXML;
         private System.Windows.Forms.GroupBox groupBoxMainStatistics;
@@ -287,5 +332,10 @@ namespace SimulationSessionSummary_NS
         private System.Windows.Forms.Label labelRemainingWeapons;
         private System.Windows.Forms.Label labelRedTeamAliveEntities;
         private System.Windows.Forms.Label labelBlueTeamAliveEntities;
+        private System.Windows.Forms.TabControl tabControl;
+        private System.Windows.Forms.TabPage tabPage2;
+        private System.Windows.Forms.TabPage tabPage1;
+        private System.Windows.Forms.DataVisualization.Charting.Chart chart1;
+        private System.Windows.Forms.DataGridView dataGridView1;
     }
 }

@@ -11,6 +11,9 @@ namespace SimulationSessionSummary_NS
         public string Domain { get; set; }
         public bool Alive { get; set; }
         public int Kills => weaponObjects.Count(w => w.ResultedInKill); // updates automatically
+        public int RemainingWeapons => weaponObjects.Count(w => !w.Fired); // updates automatically
+        public int FiredWeapons => weaponObjects.Count(w => w.Fired); // updates automatically
+
         public List<WeaponObject> weaponObjects { get; set; }
 
         // Parameterless constructor (required for serialization)
