@@ -36,6 +36,11 @@ namespace SimulationSessionSummary_NS
         private SortableBindingList<PhysicalEntityWrapper> _userSelectedEntities = new SortableBindingList<PhysicalEntityWrapper>();
         private List<PlatformObject> platformObjects = new List<PlatformObject>();
 
+        // These two lists are READ ONLY!!! And update automatically
+        // The point of them is to be used as a very convenient DataSource for dataGridViews while still keeping one main list for convenience
+        private List<PlatformObject> team1Platforms => platformObjects.Where(p => p.Team == 1).ToList();
+        private List<PlatformObject> team2Platforms => platformObjects.Where(p => p.Team == 2).ToList();
+
         /// <summary>
         /// Local reference to the plugin class -- used for window configuration save/restore
         /// </summary>
@@ -151,6 +156,8 @@ namespace SimulationSessionSummary_NS
         {
             // note(anthony): THIS IS TEMPORARY!!!! THIS IS JUST TO SHOW DATASOURCE USAGE FOR A DATAGRIDVIEW TO TIM :)
             dataGridView1.DataSource = platformObjects.ToArray();
+            dataGridView2.DataSource = team1Platforms.ToArray();
+            dataGridView3.DataSource = team2Platforms.ToArray();
             // :)
 
             labelBlueTeamAliveEntities.Text = GetTeamAlivePlatformsList(1).Count.ToString();
