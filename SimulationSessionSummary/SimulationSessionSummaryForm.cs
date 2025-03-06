@@ -592,10 +592,12 @@ namespace SimulationSessionSummary_NS
                     {
                         foreach (IWeaponModel weaponObject in newEntity.Weapons)
                         {
-                            // note(anthony): Maybe we can use a dictionary amraam = missile etc for the type instead of placeholder
-                            WeaponObject weapon = new WeaponObject(weaponObject.Type, "Placeholder Type", weaponObject.ParentEntity.Name, weaponObject.ID);
+                            int tempType = (int)weaponObject.FunctionType;
+                            if (tempType == 2 || tempType == 3 || tempType == 4 || tempType == 5 || tempType == 6 || tempType == 7) { 
+                                // note(anthony): Maybe we can use a dictionary amraam = missile etc for the type instead of placeholder
+                                WeaponObject weapon = new WeaponObject(weaponObject.Type, "Placeholder Type", weaponObject.ParentEntity.Name, weaponObject.ID);
                             weaponObjects.Add(weapon);
-                            
+                            }
                         }
                     }
 
