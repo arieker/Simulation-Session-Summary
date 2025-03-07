@@ -156,7 +156,7 @@ namespace SimulationSessionSummary_NS
         {
             // note(anthony): THIS IS TEMPORARY!!!! THIS IS JUST TO SHOW DATASOURCE USAGE FOR A DATAGRIDVIEW TO TIM :)
             dataGridView1.DataSource = platformObjects.ToArray();
-            dataGridView2.DataSource = team1Platforms.ToArray();
+            dataGridViewMainPage.DataSource = team1Platforms.ToArray();
             dataGridView3.DataSource = team2Platforms.ToArray();
             // :)
 
@@ -634,6 +634,16 @@ namespace SimulationSessionSummary_NS
                     }
                 }
             }
+        }
+
+        private void chart1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }
