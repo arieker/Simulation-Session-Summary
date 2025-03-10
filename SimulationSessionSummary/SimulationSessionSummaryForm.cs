@@ -155,9 +155,7 @@ namespace SimulationSessionSummary_NS
         private void updateMainStatistics()
         {
             // note(anthony): THIS IS TEMPORARY!!!! THIS IS JUST TO SHOW DATASOURCE USAGE FOR A DATAGRIDVIEW TO TIM :)
-            dataGridView1.DataSource = platformObjects.ToArray();
             dataGridViewMainPage.DataSource = team1Platforms.ToArray();
-            dataGridView3.DataSource = team2Platforms.ToArray();
             // :)
 
             labelBlueTeamAliveEntities.Text = GetTeamAlivePlatformsList(1).Count.ToString();
