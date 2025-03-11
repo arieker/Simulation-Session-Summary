@@ -17,7 +17,7 @@ namespace SimulationSessionSummary_NS
         private string _domain;
         private bool _alive;
         private List<WeaponObject> _weaponObjects;
-        private GunObject _gun;
+        private List<GunObject> _gunObjects;
 
         public string Name
         {
@@ -84,22 +84,22 @@ namespace SimulationSessionSummary_NS
             }
         }
 
-        public int Kills => WeaponObjects.Count(w => w.ResultedInKill) + Gun.KilledPlatforms.Count;
+        public int Kills => WeaponObjects.Count(w => w.ResultedInKill) + GunObjects.Sum(g => g.Kills); //Gun.KilledPlatforms.Count;
 
         public int RemainingWeaponsCount => WeaponObjects.Count(w => !w.Fired);
 
         public int FiredWeaponsCount => WeaponObjects.Count(w => w.Fired);
 
         [Browsable(false)]
-        public GunObject Gun
+        public List<GunObject> GunObjects
         {
-            get => _gun;
+            get => _gunObjects;
             set
             {
-                if (_gun != value)
+                if (_gunObjects != value)
                 {
-                    _gun = value;
-                    OnPropertyChanged(nameof(Gun));
+                    _gunObjects = value;
+                    OnPropertyChanged(nameof(GunObjects));
                     OnPropertyChanged(nameof(Kills));
                 }
             }
@@ -135,15 +135,16 @@ namespace SimulationSessionSummary_NS
         public PlatformObject()
         {
             WeaponObjects = new List<WeaponObject>();
+            GunObjects = new List<GunObject>();
         }
 
-        public PlatformObject(string name, string type, int team, string domain, ulong startingBullets, List<WeaponObject> weaponObjects)
+        public PlatformObject(string name, string type, int team, string domain, List<GunObject> gunObjects, List<WeaponObject> weaponObjects)
         {
             Name = name;
             Type = type;
             Team = team;
             Domain = domain;
-            Gun = new GunObject(startingBullets);
+            this.GunObjects = gunObjects;
             this.WeaponObjects = weaponObjects;
             foreach (WeaponObject weaponObject in weaponObjects)
             {

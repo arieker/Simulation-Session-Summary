@@ -11,6 +11,7 @@ namespace SimulationSessionSummary_NS
 
         private ulong _startingBullets;
         private ulong _remainingBullets;
+        public string _name;
 
         public ulong StartingBullets
         {
@@ -73,11 +74,12 @@ namespace SimulationSessionSummary_NS
         // Parameterless constructor (required for serialization)
         public GunObject() { }
 
-        public GunObject(ulong startingBullets)
+        public GunObject(ulong startingBullets, string name)
         {
             StartingBullets = startingBullets;
             RemainingBullets = startingBullets;
             Misses = 0;
+            _name = name;
         }
 
         protected void OnPropertyChanged(string propertyName)

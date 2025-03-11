@@ -125,11 +125,13 @@ namespace SimulationSessionSummary_NS
             platformObjects.SelectMany(p => p.WeaponObjects).FirstOrDefault(w => w.InstanceID == weaponID);
 
         private Boolean isWeaponABullet(ulong weaponID) =>
-            platformObjects.Any(p => p.Gun.ActiveBulletEntityIDs.Contains(weaponID));
+            platformObjects.Any(p => p.GunObjects.Any(gun => gun.ActiveBulletEntityIDs.Contains(weaponID)));
 
         private GunObject findGunFromBulletID(ulong bulletID) =>
-            platformObjects.First(p => p.Gun.ActiveBulletEntityIDs.Contains(bulletID)).Gun;
+            platformObjects.SelectMany(p => p.GunObjects).First(gun => gun.ActiveBulletEntityIDs.Contains(bulletID));
 
+        private GunObject findGunFromName(string name) =>
+            platformObjects.SelectMany(p => p.GunObjects).FirstOrDefault(g => g._name == name);
 
         // Team related helper functions
         // Weapons
@@ -153,6 +155,30 @@ namespace SimulationSessionSummary_NS
 
         private List<PlatformObject> GetTeamDeadPlatformsList(int team) =>
             GetTeamAllPlatformsList(team).Where(p => !p.Alive).ToList();
+
+        private List<PlatformObject> GetTeamAliveGroundPlatformsList(int team) =>
+            GetTeamAllPlatformsList(team).Where(p => p.Alive && p.Domain == "1").ToList();
+
+        private List<PlatformObject> GetTeamGroundPlatformsList(int team) =>
+            GetTeamAllPlatformsList(team).Where(p => p.Domain == "1").ToList();
+
+        private List<PlatformObject> GetTeamAliveAirPlatformsList(int team) =>
+            GetTeamAllPlatformsList(team).Where(p => p.Alive && p.Domain == "2").ToList();
+
+        private List<PlatformObject> GetTeamAirPlatformsList(int team) =>
+            GetTeamAllPlatformsList(team).Where(p => p.Domain == "2").ToList();
+
+        private List<PlatformObject> GetTeamAliveSeaPlatformsList(int team) =>
+            GetTeamAllPlatformsList(team).Where(p => p.Alive && p.Domain == "3" && p.Domain == "4").ToList();
+
+        private List<PlatformObject> GetTeamSeaPlatformsList(int team) =>
+            GetTeamAllPlatformsList(team).Where(p => p.Domain == "3" && p.Domain == "4").ToList();
+
+        private List<PlatformObject> GetTeamAliveSpacePlatformsList(int team) =>
+            GetTeamAllPlatformsList(team).Where(p => p.Alive && p.Domain == "5").ToList();
+
+        private List<PlatformObject> GetTeamSpacePlatformsList(int team) =>
+            GetTeamAllPlatformsList(team).Where(p => p.Domain == "5").ToList();
 
         #endregion
 
@@ -192,6 +218,47 @@ namespace SimulationSessionSummary_NS
             int totalRedWeapons = GetTeamAllWeaponsList(2).Count;
             int remainingRedWeapons = GetTeamRemainingWeaponsList(2).Count;
             Debug.WriteLine(totalRedWeapons > 0 ? (remainingRedWeapons / (double)totalRedWeapons) * 100 : 0);
+
+            Debug.WriteLine("Blue Team Remaining Ground Forces as a %:");
+            int aliveGroundBluePlatforms = GetTeamAliveGroundPlatformsList(1).Count;
+            int groundBluePlatforms = GetTeamGroundPlatformsList(1).Count;
+            Debug.WriteLine(groundBluePlatforms > 0 ? (aliveGroundBluePlatforms / (double)groundBluePlatforms) * 100 : 0);
+
+            Debug.WriteLine("Red Team Remaining Ground Forces as a %:");
+            int aliveGroundRedPlatforms = GetTeamAliveGroundPlatformsList(2).Count;
+            int groundRedPlatforms = GetTeamGroundPlatformsList(2).Count;
+            Debug.WriteLine(groundRedPlatforms > 0 ? (aliveGroundRedPlatforms / (double)groundRedPlatforms) * 100 : 0);
+
+            Debug.WriteLine("Blue Team Remaining Air Forces as a %:");
+            int aliveAirBluePlatforms = GetTeamAliveAirPlatformsList(1).Count;
+            int airBluePlatforms = GetTeamAirPlatformsList(1).Count;
+            Debug.WriteLine(airBluePlatforms > 0 ? (aliveAirBluePlatforms / (double)airBluePlatforms) * 100 : 0);
+
+            Debug.WriteLine("Red Team Remaining Air Forces as a %:");
+            int aliveAirRedPlatforms = GetTeamAliveAirPlatformsList(2).Count;
+            int airRedPlatforms = GetTeamAirPlatformsList(2).Count;
+            Debug.WriteLine(airRedPlatforms > 0 ? (aliveAirRedPlatforms / (double)airRedPlatforms) * 100 : 0);
+
+            Debug.WriteLine("Blue Team Remaining Sea Forces as a %:");
+            int aliveSeaBluePlatforms = GetTeamAliveSeaPlatformsList(1).Count;
+            int seaBluePlatforms = GetTeamSeaPlatformsList(1).Count;
+            Debug.WriteLine(seaBluePlatforms > 0 ? (aliveSeaBluePlatforms / (double)seaBluePlatforms) * 100 : 0);
+
+            Debug.WriteLine("Red Team Remaining Sea Forces as a %:");
+            int aliveSeaRedPlatforms = GetTeamAliveSeaPlatformsList(2).Count;
+            int seaRedPlatforms = GetTeamSeaPlatformsList(2).Count;
+            Debug.WriteLine(seaRedPlatforms > 0 ? (aliveSeaRedPlatforms / (double)seaRedPlatforms) * 100 : 0);
+
+            Debug.WriteLine("Blue Team Remaining Space Forces as a %:");
+            int aliveSpaceBluePlatforms = GetTeamAliveSpacePlatformsList(1).Count;
+            int spaceBluePlatforms = GetTeamSpacePlatformsList(1).Count;
+            Debug.WriteLine(spaceBluePlatforms > 0 ? (aliveSpaceBluePlatforms / (double)spaceBluePlatforms) * 100 : 0);
+
+            Debug.WriteLine("Red Team Remaining Space Forces as a %:");
+            int aliveSpaceRedPlatforms = GetTeamAliveSpacePlatformsList(2).Count;
+            int spaceRedPlatforms = GetTeamSpacePlatformsList(2).Count;
+            Debug.WriteLine(spaceRedPlatforms > 0 ? (aliveSpaceRedPlatforms / (double)spaceRedPlatforms) * 100 : 0);
+
         }
 
         private void InitUI()
@@ -242,22 +309,17 @@ namespace SimulationSessionSummary_NS
                 // We can't use our helper function to figure it out, because it relies on the bullet entity already being in the object model
                 // This is adding that entity to the object model, since bullet entities are only created when the gun is fired
                 // Please do not touch this without asking me first -anthony
-                if (fe.Weapons != null)
+
+                GunObject OurGunObject = findGunFromName(me.Name);
+
+                if(OurGunObject != null)
                 {
-                    foreach (IWeaponModel weaponObject in fe.Weapons)
-                    {
-                        int tempType = (int)weaponObject.FunctionType;
-                        if (tempType == 4)
-                        {
-                            if (weaponObject.EquipmentWeapon.MountedMunitionsCount < OurFiringEntity.Gun.RemainingBullets)
-                            {
-                                OurFiringEntity.Gun.RemainingBullets--;
-                                OurFiringEntity.Gun.ActiveBulletEntityIDs.Add(me.ID);
-                                return;
-                            }
-                        }
-                    }
+                    OurGunObject.RemainingBullets--;
+                    OurGunObject.ActiveBulletEntityIDs.Add(me.ID);
+                    return;
                 }
+
+
 
                 // Should only get here if it's not a bullet
                 WeaponObject OurWeaponObject = FindWeaponFromWeaponID(me.ID);
@@ -620,6 +682,7 @@ namespace SimulationSessionSummary_NS
             {
                 var newEntity = kvp.Value;
                 List<WeaponObject> weaponObjects = new List<WeaponObject>();
+                List<GunObject> gunObjects = new List<GunObject>();
 
                 if (newEntity.EntityType.Kind.ToString() == "1" || newEntity.EntityType.Kind.ToString() == "3")
                 {
@@ -629,22 +692,25 @@ namespace SimulationSessionSummary_NS
                         foreach (IWeaponModel weaponObject in newEntity.Weapons)
                         {
                             int tempType = (int)weaponObject.FunctionType;
-                            if (tempType == 2 || tempType == 3 || tempType == 4 || tempType == 5 || tempType == 6 || tempType == 7)
+                            if (tempType == 2 || tempType == 3 || tempType == 4)
                             {
                                 // note(anthony): 4 is AirAndGroundWeapon, We can't safely assume that this is always the gun, but for now, we will
-                                if (tempType == 4)
+                                if (weaponObject.EquipmentWeapon.MountedMunitionsCount > 1)
                                 {
                                     startingBullets = weaponObject.EquipmentWeapon.MountedMunitionsCount;
+                                    GunObject gun = new GunObject(startingBullets, weaponObject.EquipmentWeapon.Name);
+                                    gunObjects.Add(gun);
                                 }
-
-                                // note(anthony): Maybe we can use a dictionary amraam = missile etc for the type instead of placeholder
-                                WeaponObject weapon = new WeaponObject(weaponObject.Type, weaponObject.FunctionType.ToString(), weaponObject.ParentEntity.Name, weaponObject.ID);
-                                weaponObjects.Add(weapon);
+                                else
+                                {
+                                    WeaponObject weapon = new WeaponObject(weaponObject.Type, weaponObject.FunctionType.ToString(), weaponObject.ParentEntity.Name, weaponObject.ID);
+                                    weaponObjects.Add(weapon);
+                                }
                             }
                         }
                     }
 
-                    PlatformObject newObject = new PlatformObject(newEntity.Name, newEntity.Type, (int)newEntity.TeamAffiliation, newEntity.Domain.ToString(), startingBullets, weaponObjects);
+                    PlatformObject newObject = new PlatformObject(newEntity.Name, newEntity.Type, (int)newEntity.TeamAffiliation, newEntity.Domain.ToString(), gunObjects, weaponObjects);
                     platformObjects.Add(newObject);
                 }
             }
