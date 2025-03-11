@@ -119,10 +119,10 @@ namespace SimulationSessionSummary_NS
             platformObjects.FirstOrDefault(p => p.Name == name);
 
         private PlatformObject FindPlatformFromWeaponID(ulong weaponID) =>
-            platformObjects.FirstOrDefault(p => p.weaponObjects.Any(w => w.InstanceID == weaponID));
+            platformObjects.FirstOrDefault(p => p.WeaponObjects.Any(w => w.InstanceID == weaponID));
 
         private WeaponObject FindWeaponFromWeaponID(ulong weaponID) =>
-            platformObjects.SelectMany(p => p.weaponObjects).FirstOrDefault(w => w.InstanceID == weaponID);
+            platformObjects.SelectMany(p => p.WeaponObjects).FirstOrDefault(w => w.InstanceID == weaponID);
 
         private Boolean isWeaponABullet(ulong weaponID) =>
             platformObjects.Any(p => p.Gun.ActiveBulletEntityIDs.Contains(weaponID));
@@ -135,7 +135,7 @@ namespace SimulationSessionSummary_NS
         // Weapons
         private List<WeaponObject> GetTeamAllWeaponsList(int team) =>
             platformObjects.Where(p => p.Team == team)
-                           .SelectMany(p => p.weaponObjects)
+                           .SelectMany(p => p.WeaponObjects)
                            .ToList();
 
         private List<WeaponObject> GetTeamRemainingWeaponsList(int team) =>
@@ -640,6 +640,12 @@ namespace SimulationSessionSummary_NS
 
         private void buttonSaveXML_Click(object sender, EventArgs e)
         {
+            // note(anthony): Some notes on serialization
+            // Any and all [XmlIgnore] are because serialization will not work at all if included
+            // It is possible to modify them to print anyway, for instance PlatformHitCounts can be turned into a list when serialized
+            // I've not done that for now, since this is just for debugging
+            // If we were to include this in the final release, it would probably be best to add [XmlIgnore] to a lot more properties
+            //     and also maybe spit out a summary at the top if we don't support loading an xml and only saving one
             using (SaveFileDialog saveFileDialog = new SaveFileDialog())
             {
                 saveFileDialog.Filter = "XML Files (*.xml)|*.xml";
@@ -653,7 +659,7 @@ namespace SimulationSessionSummary_NS
                         XmlSerializer serializer = new XmlSerializer(typeof(List<PlatformObject>));
                         using (TextWriter writer = new StreamWriter(saveFileDialog.FileName))
                         {
-                            serializer.Serialize(writer, platformObjects);
+                            serializer.Serialize(writer, platformObjects.ToList());
                         }
 
                         MessageBox.Show("File saved successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);

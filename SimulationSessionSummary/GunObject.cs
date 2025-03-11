@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Xml.Serialization;
 
 namespace SimulationSessionSummary_NS
 {
@@ -39,12 +40,14 @@ namespace SimulationSessionSummary_NS
 
         public int Hits => PlatformHitCounts.Values.Sum();
 
-        public int Misses = 0;
+        public int Misses { get; set; }
 
         [Browsable(false)]
+        [XmlIgnore]
         public Dictionary<PlatformObject, int> PlatformHitCounts { get; set; } = new Dictionary<PlatformObject, int>();
 
         [Browsable(false)]
+        [XmlIgnore]
         public List<PlatformObject> KilledPlatforms { get; set; } = new List<PlatformObject>();
 
         public int Kills => KilledPlatforms.Count;
@@ -67,10 +70,14 @@ namespace SimulationSessionSummary_NS
             OnPropertyChanged(nameof(PlatformHitCounts));
         }
 
+        // Parameterless constructor (required for serialization)
+        public GunObject() { }
+
         public GunObject(ulong startingBullets)
         {
             StartingBullets = startingBullets;
             RemainingBullets = startingBullets;
+            Misses = 0;
         }
 
         protected void OnPropertyChanged(string propertyName)

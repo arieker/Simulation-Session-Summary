@@ -13,9 +13,9 @@ namespace SimulationSessionSummary_NS
             _platformObject = platformObject;
             InitializeComponent();
 
-            dataGridViewWeapons.DataSource = _platformObject.weaponObjects;
+            dataGridViewWeapons.DataSource = _platformObject.WeaponObjects;
 
-            foreach (var weapon in _platformObject.weaponObjects)
+            foreach (var weapon in _platformObject.WeaponObjects)
             {
                 weapon.PropertyChanged += Weapon_PropertyChanged;
             }

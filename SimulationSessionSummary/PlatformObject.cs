@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Xml.Serialization;
 
 namespace SimulationSessionSummary_NS
 {
@@ -83,11 +84,11 @@ namespace SimulationSessionSummary_NS
             }
         }
 
-        public int Kills => weaponObjects.Count(w => w.ResultedInKill) + Gun.KilledPlatforms.Count;
+        public int Kills => WeaponObjects.Count(w => w.ResultedInKill) + Gun.KilledPlatforms.Count;
 
-        public int RemainingWeaponsCount => weaponObjects.Count(w => !w.Fired);
+        public int RemainingWeaponsCount => WeaponObjects.Count(w => !w.Fired);
 
-        public int FiredWeaponsCount => weaponObjects.Count(w => w.Fired);
+        public int FiredWeaponsCount => WeaponObjects.Count(w => w.Fired);
 
         [Browsable(false)]
         public GunObject Gun
@@ -104,7 +105,7 @@ namespace SimulationSessionSummary_NS
             }
         }
 
-        public List<WeaponObject> weaponObjects
+        public List<WeaponObject> WeaponObjects
         {
             get => _weaponObjects;
             set
@@ -112,7 +113,7 @@ namespace SimulationSessionSummary_NS
                 if (_weaponObjects != value)
                 {
                     _weaponObjects = value;
-                    OnPropertyChanged(nameof(weaponObjects));
+                    OnPropertyChanged(nameof(WeaponObjects));
                 }
             }
         }
@@ -133,7 +134,7 @@ namespace SimulationSessionSummary_NS
         // Parameterless constructor (required for serialization)
         public PlatformObject()
         {
-            weaponObjects = new List<WeaponObject>();
+            WeaponObjects = new List<WeaponObject>();
         }
 
         public PlatformObject(string name, string type, int team, string domain, ulong startingBullets, List<WeaponObject> weaponObjects)
@@ -143,7 +144,7 @@ namespace SimulationSessionSummary_NS
             Team = team;
             Domain = domain;
             Gun = new GunObject(startingBullets);
-            this.weaponObjects = weaponObjects;
+            this.WeaponObjects = weaponObjects;
             foreach (WeaponObject weaponObject in weaponObjects)
             {
                 weaponObject.PropertyChanged += WeaponObject_PropertyChanged;
