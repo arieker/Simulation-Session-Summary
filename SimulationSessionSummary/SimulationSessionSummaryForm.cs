@@ -19,6 +19,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.Serialization;
+using System.Collections.ObjectModel;
 
 namespace SimulationSessionSummary_NS
 {
@@ -34,7 +35,7 @@ namespace SimulationSessionSummary_NS
         private IMission _mission;
         private SimulationSessionSummary _plugin;
         private SortableBindingList<PhysicalEntityWrapper> _userSelectedEntities = new SortableBindingList<PhysicalEntityWrapper>();
-        private List<PlatformObject> platformObjects = new List<PlatformObject>();
+        private BindingList<PlatformObject> platformObjects = new BindingList<PlatformObject>();
 
         // These two lists are READ ONLY!!! And update automatically
         // The point of them is to be used as a very convenient DataSource for dataGridViews while still keeping one main list for convenience
@@ -123,6 +124,13 @@ namespace SimulationSessionSummary_NS
         private WeaponObject FindWeaponFromWeaponID(ulong weaponID) =>
             platformObjects.SelectMany(p => p.weaponObjects).FirstOrDefault(w => w.InstanceID == weaponID);
 
+        private Boolean isWeaponABullet(ulong weaponID) =>
+            platformObjects.Any(p => p.Gun.ActiveBulletEntityIDs.Contains(weaponID));
+
+        private GunObject findGunFromBulletID(ulong bulletID) =>
+            platformObjects.First(p => p.Gun.ActiveBulletEntityIDs.Contains(bulletID)).Gun;
+
+
         // Team related helper functions
         // Weapons
         private List<WeaponObject> GetTeamAllWeaponsList(int team) =>
@@ -154,10 +162,7 @@ namespace SimulationSessionSummary_NS
         // In the future when we start adding dataGridViews and such these could likely just be updated to be .Length/.Count calls of the dataGridViews for these respective things
         private void updateMainStatistics()
         {
-            // note(anthony): THIS IS TEMPORARY!!!! THIS IS JUST TO SHOW DATASOURCE USAGE FOR A DATAGRIDVIEW TO TIM :)
-            dataGridViewMainPage.DataSource = team1Platforms.ToArray();
-            // :)
-
+            // REFERENCE: Blue Team 1 | Red Team 2
             labelBlueTeamAliveEntities.Text = GetTeamAlivePlatformsList(1).Count.ToString();
             labelBlueTeamRemainingWeapons.Text = GetTeamRemainingWeaponsList(1).Count.ToString();
 
@@ -203,10 +208,34 @@ namespace SimulationSessionSummary_NS
                 IPhysicalEntity fe = args.FiringEntity;
                 IPhysicalEntity me = args.MunitionEntity;
                 PlatformObject OurFiringEntity = FindPlatformFromName(fe.Name);
+
+                // Have to find out if it's a bullet instead of a missile right here, but it's not super easy
+                // We can't use our helper function to figure it out, because it relies on the bullet entity already being in the object model
+                // This is adding that entity to the object model, since bullet entities are only created when the gun is fired
+                // Please do not touch this without asking me first -anthony
+                if (fe.Weapons != null)
+                {
+                    foreach (IWeaponModel weaponObject in fe.Weapons)
+                    {
+                        int tempType = (int)weaponObject.FunctionType;
+                        if (tempType == 4)
+                        {
+                            if (weaponObject.EquipmentWeapon.MountedMunitionsCount < OurFiringEntity.Gun.RemainingBullets)
+                            {
+                                OurFiringEntity.Gun.RemainingBullets--;
+                                OurFiringEntity.Gun.ActiveBulletEntityIDs.Add(me.ID);
+                                return;
+                            }
+                        }
+                    }
+                }
+
+                // Should only get here if it's not a bullet
                 WeaponObject OurWeaponObject = FindWeaponFromWeaponID(me.ID);
 
                 OurWeaponObject.Fired = true;
-                OurWeaponObject.TargetName = me.TargetAssigned.Name;
+                // note(anthony): While testing after a plane evaded a missile, it managed to shoot one back, but it failed to set a target on it which caused an error, it shouldn't now
+                OurWeaponObject.TargetName = me.TargetAssigned?.Name ?? "None";
                 OurWeaponObject.TargetLat = me.TargetLocationAssigned.Latitude_degrees;
                 OurWeaponObject.TargetLon = me.TargetLocationAssigned.Longitude_degrees;
             }
@@ -233,14 +262,31 @@ namespace SimulationSessionSummary_NS
                 IPhysicalEntity me = args.MunitionEntity;
                 Double damage_percent = args.DamagePercent; // 0-1 so 50% is 0.5
                 PlatformObject OurTargetEntity = FindPlatformFromName(te.Name);
-                WeaponObject OurWeaponObject = FindWeaponFromWeaponID(me.ID);
 
-                OurWeaponObject.Hit = true;
-                if (te.Health <= 0)
+                if (isWeaponABullet(me.ID))
                 {
-                    OurTargetEntity.Alive = false;
-                    OurWeaponObject.ResultedInKill = true;
+                    GunObject OurGunObject = findGunFromBulletID(me.ID);
+                    OurGunObject.ActiveBulletEntityIDs.Remove(me.ID);
+                    OurGunObject.RegisterBulletHit(OurTargetEntity);
+                    if (te.Health <= 0)
+                    {
+                        OurTargetEntity.Alive = false;
+                        OurGunObject.KilledPlatforms.Add(OurTargetEntity);
+                    }
                 }
+                else
+                {
+                    WeaponObject OurWeaponObject = FindWeaponFromWeaponID(me.ID);
+                    OurWeaponObject.Hit = true;
+                    if (te.Health <= 0)
+                    {
+                        OurTargetEntity.Alive = false;
+                        OurWeaponObject.ResultedInKill = true;
+                    }
+                }
+
+                
+                
             }
             catch (Exception ex)
             {
@@ -264,9 +310,18 @@ namespace SimulationSessionSummary_NS
                 // note(anthony): this is called after HandleWeaponDamage, or completely on its own if the weapon resulted in zero damage
                 IMission.WeaponDetonationEventArgs args = e as IMission.WeaponDetonationEventArgs;
                 IPhysicalEntity me = args.MunitionEntity;
-                WeaponObject OurWeaponObject = FindWeaponFromWeaponID(me.ID);
-
-                OurWeaponObject.Detonated = true;
+                
+                if (isWeaponABullet(me.ID))
+                {
+                    GunObject OurGunObject = findGunFromBulletID(me.ID);
+                    OurGunObject.ActiveBulletEntityIDs.Remove(me.ID);
+                    OurGunObject.Misses++;
+                }
+                else
+                {
+                    WeaponObject OurWeaponObject = FindWeaponFromWeaponID(me.ID);
+                    OurWeaponObject.Detonated = true;
+                }
             }
             catch (Exception ex)
             {
@@ -579,30 +634,60 @@ namespace SimulationSessionSummary_NS
             // note(anthony): don't click this button when there are missiles active since those will be added as platforms which is obviously not going to play nice
             buttonStart.Enabled = false;
 
-            foreach (KeyValuePair<ulong, IPhysicalEntity>  kvp in _mission.PhysicalEntities)
+            foreach (KeyValuePair<ulong, IPhysicalEntity> kvp in _mission.PhysicalEntities)
             {
                 var newEntity = kvp.Value;
                 List<WeaponObject> weaponObjects = new List<WeaponObject>();
 
                 if (newEntity.EntityType.Kind.ToString() == "1" || newEntity.EntityType.Kind.ToString() == "3")
                 {
+                    ulong startingBullets = 0;
                     if (newEntity.Weapons != null)
                     {
                         foreach (IWeaponModel weaponObject in newEntity.Weapons)
                         {
                             int tempType = (int)weaponObject.FunctionType;
-                            if (tempType == 2 || tempType == 3 || tempType == 4 || tempType == 5 || tempType == 6 || tempType == 7) { 
+                            if (tempType == 2 || tempType == 3 || tempType == 4 || tempType == 5 || tempType == 6 || tempType == 7)
+                            {
+                                // note(anthony): 4 is AirAndGroundWeapon, We can't safely assume that this is always the gun, but for now, we will
+                                if (tempType == 4)
+                                {
+                                    startingBullets = weaponObject.EquipmentWeapon.MountedMunitionsCount;
+                                }
+
                                 // note(anthony): Maybe we can use a dictionary amraam = missile etc for the type instead of placeholder
-                                WeaponObject weapon = new WeaponObject(weaponObject.Type, "Placeholder Type", weaponObject.ParentEntity.Name, weaponObject.ID);
-                            weaponObjects.Add(weapon);
+                                WeaponObject weapon = new WeaponObject(weaponObject.Type, weaponObject.FunctionType.ToString(), weaponObject.ParentEntity.Name, weaponObject.ID);
+                                weaponObjects.Add(weapon);
                             }
                         }
                     }
 
-                    PlatformObject newObject = new PlatformObject(newEntity.Name, newEntity.Type, (int)newEntity.TeamAffiliation, newEntity.Domain.ToString(), weaponObjects);
-                    platformObjects.Add(newObject);                   
+                    PlatformObject newObject = new PlatformObject(newEntity.Name, newEntity.Type, (int)newEntity.TeamAffiliation, newEntity.Domain.ToString(), startingBullets, weaponObjects);
+                    platformObjects.Add(newObject);
                 }
             }
+
+            dataGridViewMainPage.DataSource = platformObjects.ToArray();
+
+            foreach (PlatformObject platformObject in platformObjects)
+            {
+                TabPage tabPage = new TabPage(platformObject.Name);
+                IndividualPlaneControl customControl = new IndividualPlaneControl(platformObject);
+                customControl.Dock = DockStyle.Fill;
+                tabPage.Controls.Add(customControl);
+                if (platformObject.Team == 1) // Blue Team
+                {
+                    tabControlTeamBluePlanes.TabPages.Add(tabPage);
+                }
+                else if (platformObject.Team == 2) // Red Team
+                {
+                    tabControlTeamRedPlanes.TabPages.Add(tabPage);
+                }
+                // note(anthony): Anything not on blue or red team won't have a tab created for it right now
+                // The data in these tabs will automatically update, but it's not so simple
+
+            }
+
             updateMainStatistics();
         }
 
@@ -634,14 +719,6 @@ namespace SimulationSessionSummary_NS
             }
         }
 
-        private void chart1_Click(object sender, EventArgs e)
-        {
 
-        }
-
-        private void textBox1_TextChanged(object sender, EventArgs e)
-        {
-
-        }
     }
 }

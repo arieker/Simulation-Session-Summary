@@ -56,6 +56,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GunObject.cs" />
+    <Compile Include="IndividualPlaneControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="IndividualPlaneControl.Designer.cs">
+      <DependentUpon>IndividualPlaneControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="PlatformObject.cs" />
     <Compile Include="SimulationSessionSummary.cs" />
     <Compile Include="SimulationSessionSummaryForm.cs">
@@ -76,6 +83,9 @@
     <Service Include="{94E38DFF-614B-4cbd-B67C-F211BB35CE8B}" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="IndividualPlaneControl.resx">
+      <DependentUpon>IndividualPlaneControl.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="SimulationSessionSummaryForm.resx">
       <DependentUpon>SimulationSessionSummaryForm.cs</DependentUpon>
     </EmbeddedResource>
