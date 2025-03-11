@@ -474,9 +474,12 @@ namespace SimulationSessionSummary_NS
                 // events you can leverage in your plugin.
 
                 //_mission.PlatformMotionComplete += HandlePlatformMotionComplete;
-                _mission.WeaponDetonation += HandleWeaponDetonated;
-                _mission.WeaponFire += HandleWeaponFire;
-                _mission.WeaponDamage += HandleWeaponDamage;
+
+                // note(anthony): uncomment these if issues are caused by them being in buttonStart_Click instead of originally here
+                //_mission.WeaponDetonation += HandleWeaponDetonated;
+                //_mission.WeaponFire += HandleWeaponFire;
+                //_mission.WeaponDamage += HandleWeaponDamage;
+
                 //_mission.Map.DrawingComplete += HandleMapDrawComplete;
 
             }
@@ -577,7 +580,12 @@ namespace SimulationSessionSummary_NS
         private void buttonStart_Click(object sender, EventArgs e)
         {
             // note(anthony): don't click this button when there are missiles active since those will be added as platforms which is obviously not going to play nice
-            buttonStart.Enabled = false;
+
+            if (_mission.PhysicalEntities.Count == 0)
+            {
+                MessageBox.Show("Zero entities exist in the current mission!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }    
 
             foreach (KeyValuePair<ulong, IPhysicalEntity> kvp in _mission.PhysicalEntities)
             {
@@ -635,6 +643,10 @@ namespace SimulationSessionSummary_NS
 
             }
 
+            buttonStart.Enabled = false;
+            _mission.WeaponDetonation += HandleWeaponDetonated;
+            _mission.WeaponFire += HandleWeaponFire;
+            _mission.WeaponDamage += HandleWeaponDamage;
             updateMainStatistics();
         }
 
