@@ -163,6 +163,9 @@ namespace SimulationSessionSummary_NS
         private void updateMainStatistics()
         {
             // REFERENCE: Blue Team 1 | Red Team 2
+
+            dataGridViewMainPage.Refresh();
+
             labelBlueTeamAliveEntities.Text = GetTeamAlivePlatformsList(1).Count.ToString();
             labelBlueTeamRemainingWeapons.Text = GetTeamRemainingWeaponsList(1).Count.ToString();
 
@@ -189,6 +192,32 @@ namespace SimulationSessionSummary_NS
             int totalRedWeapons = GetTeamAllWeaponsList(2).Count;
             int remainingRedWeapons = GetTeamRemainingWeaponsList(2).Count;
             Debug.WriteLine(totalRedWeapons > 0 ? (remainingRedWeapons / (double)totalRedWeapons) * 100 : 0);
+        }
+
+        private void InitUI()
+        {
+            dataGridViewMainPage.DataSource = platformObjects.ToArray();
+
+            foreach (PlatformObject platformObject in platformObjects)
+            {
+                TabPage tabPage = new TabPage(platformObject.Name);
+                IndividualPlaneControl customControl = new IndividualPlaneControl(platformObject);
+                customControl.Dock = DockStyle.Fill;
+                tabPage.Controls.Add(customControl);
+                if (platformObject.Team == 1) // Blue Team
+                {
+                    tabControlTeamBluePlanes.TabPages.Add(tabPage);
+                }
+                else if (platformObject.Team == 2) // Red Team
+                {
+                    tabControlTeamRedPlanes.TabPages.Add(tabPage);
+                }
+                // note(anthony): Anything not on blue or red team won't have a tab created for it right now
+                // The data in these tabs will automatically update, but it's not so simple
+
+            }
+
+            updateMainStatistics();
         }
 
         #endregion
@@ -419,7 +448,7 @@ namespace SimulationSessionSummary_NS
             try
             {
                 //IMission.StateChangedEventArgs args = e as IMission.StateChangedEventArgs;
-                this.State_Label.Text = Enum.GetName(typeof(IMission.StateEnum), _mission.State);
+                //this.State_Label.Text = Enum.GetName(typeof(IMission.StateEnum), _mission.State);
             }
             catch (Exception ex)
             {
@@ -458,8 +487,8 @@ namespace SimulationSessionSummary_NS
             try
             {
                 // Set the initial MACE Mission state
-                this.State_Label.Text = Enum.GetName(typeof(IMission.StateEnum), _mission.State);
-                this.EntityCount_Label.Text = _mission.PhysicalEntities.Count.ToString();
+                //this.State_Label.Text = Enum.GetName(typeof(IMission.StateEnum), _mission.State);
+                //this.EntityCount_Label.Text = _mission.PhysicalEntities.Count.ToString();
 
                 // Add a handler to be notified whenever our MACE mission changes state
                 _mission.StateChanged += HandleScenarioStateChanges;
@@ -580,7 +609,7 @@ namespace SimulationSessionSummary_NS
         private void buttonStart_Click(object sender, EventArgs e)
         {
             // note(anthony): don't click this button when there are missiles active since those will be added as platforms which is obviously not going to play nice
-
+            
             if (_mission.PhysicalEntities.Count == 0)
             {
                 MessageBox.Show("Zero entities exist in the current mission!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -620,33 +649,31 @@ namespace SimulationSessionSummary_NS
                 }
             }
 
-            dataGridViewMainPage.DataSource = platformObjects.ToArray();
-            dataGridViewMainPage.AutoGenerateColumns = false;
-            
-
-            foreach (PlatformObject platformObject in platformObjects)
-            {
-                TabPage tabPage = new TabPage(platformObject.Name);
-                IndividualPlaneControl customControl = new IndividualPlaneControl(platformObject);
-                customControl.Dock = DockStyle.Fill;
-                tabPage.Controls.Add(customControl);
-                if (platformObject.Team == 1) // Blue Team
-                {
-                    tabControlTeamBluePlanes.TabPages.Add(tabPage);
-                }
-                else if (platformObject.Team == 2) // Red Team
-                {
-                    tabControlTeamRedPlanes.TabPages.Add(tabPage);
-                }
-                // note(anthony): Anything not on blue or red team won't have a tab created for it right now
-                // The data in these tabs will automatically update, but it's not so simple
-
-            }
-
+            InitUI();
             buttonStart.Enabled = false;
+            buttonClearData.Enabled = true;
             _mission.WeaponDetonation += HandleWeaponDetonated;
             _mission.WeaponFire += HandleWeaponFire;
             _mission.WeaponDamage += HandleWeaponDamage;
+        }
+
+        private void buttonClearData_Click(object sender, EventArgs e)
+        {
+            platformObjects.Clear();
+            foreach (TabPage tabPage in tabControlTeamBluePlanes.TabPages)
+            {
+                tabControlTeamBluePlanes.TabPages.Remove(tabPage);
+            }
+            foreach (TabPage tabPage in tabControlTeamRedPlanes.TabPages)
+            {
+                tabControlTeamRedPlanes.TabPages.Remove(tabPage);
+            }
+            dataGridViewMainPage.DataSource = null;
+
+            // note(anthony): Clean up anything else such as the graphs tab that we currently don't use
+
+            buttonStart.Enabled = true;
+            buttonClearData.Enabled = false;
             updateMainStatistics();
         }
 
@@ -683,7 +710,7 @@ namespace SimulationSessionSummary_NS
                 }
             }
         }
-        /*
+        
         private void buttonLoadXML_Click(object sender, EventArgs e)
         {
             using (OpenFileDialog openFileDialog = new OpenFileDialog())
@@ -703,6 +730,9 @@ namespace SimulationSessionSummary_NS
                         }
 
                         MessageBox.Show("File loaded successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        InitUI();
+                        buttonStart.Enabled = false;
+                        buttonClearData.Enabled = true;
                     }
                     catch (Exception ex)
                     {
@@ -711,7 +741,7 @@ namespace SimulationSessionSummary_NS
                 }
             }
         }
-        */
 
+        
     }
 }
