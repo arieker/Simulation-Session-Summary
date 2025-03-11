@@ -539,21 +539,6 @@ namespace SimulationSessionSummary_NS
         #region "WindowConfigChanged Event Handler"
         #endregion
 
-        private void btnAddMapEntity_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                _mission.Map.MouseDown -= HandleMapMouseDown;
-                _mission.Map.MouseDown += HandleMapMouseDown;
-                _mission.Map.SetPlugInCustomCursor("Alternate Select.cur");
-                _mission.Map.SetPlugInMapAction();
-            }
-            catch (Exception ex)
-            {
-                _mission.Logger.ErrorMessage(ex);
-            }
-        }
-
         /// <summary>
         /// Handle a mouse click event on the MACE map.
         /// </summary>
@@ -628,6 +613,8 @@ namespace SimulationSessionSummary_NS
             }
 
             dataGridViewMainPage.DataSource = platformObjects.ToArray();
+            dataGridViewMainPage.AutoGenerateColumns = false;
+            
 
             foreach (PlatformObject platformObject in platformObjects)
             {
