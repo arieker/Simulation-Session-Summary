@@ -671,7 +671,35 @@ namespace SimulationSessionSummary_NS
                 }
             }
         }
+        /*
+        private void buttonLoadXML_Click(object sender, EventArgs e)
+        {
+            using (OpenFileDialog openFileDialog = new OpenFileDialog())
+            {
+                openFileDialog.Filter = "XML Files (*.xml)|*.xml";
+                openFileDialog.Title = "Load Platform Objects";
 
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    try
+                    {
+                        XmlSerializer serializer = new XmlSerializer(typeof(List<PlatformObject>));
+                        using (TextReader reader = new StreamReader(openFileDialog.FileName))
+                        {
+                            List<PlatformObject> tempList = (List<PlatformObject>)serializer.Deserialize(reader);
+                            platformObjects = new BindingList<PlatformObject>(tempList);  // Convert back to BindingList
+                        }
+
+                        MessageBox.Show("File loaded successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Error loading file: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+            }
+        }
+        */
 
     }
 }
