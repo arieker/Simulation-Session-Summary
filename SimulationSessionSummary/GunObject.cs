@@ -41,12 +41,15 @@ namespace SimulationSessionSummary_NS
 
         public int Misses = 0;
 
+        [Browsable(false)]
         public Dictionary<PlatformObject, int> PlatformHitCounts { get; set; } = new Dictionary<PlatformObject, int>();
 
+        [Browsable(false)]
         public List<PlatformObject> KilledPlatforms { get; set; } = new List<PlatformObject>();
 
         public int Kills => KilledPlatforms.Count;
 
+        [Browsable(false)]
         public List<ulong> ActiveBulletEntityIDs { get; set; } = new List<ulong>();
 
         public void RegisterBulletHit(PlatformObject hitPlatform)

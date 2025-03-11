@@ -40,6 +40,7 @@
             this.dataGridViewWeapons.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.dataGridViewWeapons.Location = new System.Drawing.Point(0, 275);
             this.dataGridViewWeapons.Name = "dataGridViewWeapons";
+            this.dataGridViewWeapons.ReadOnly = true;
             this.dataGridViewWeapons.Size = new System.Drawing.Size(943, 370);
             this.dataGridViewWeapons.TabIndex = 0;
             // 

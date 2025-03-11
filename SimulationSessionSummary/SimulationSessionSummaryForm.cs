@@ -474,7 +474,6 @@ namespace SimulationSessionSummary_NS
                 // events you can leverage in your plugin.
 
                 //_mission.PlatformMotionComplete += HandlePlatformMotionComplete;
-                //note(anthony) NOTEWORTHY BELOW EVENTS LOOK INTO THEM IN THE FUTURE!
                 _mission.WeaponDetonation += HandleWeaponDetonated;
                 _mission.WeaponFire += HandleWeaponFire;
                 _mission.WeaponDamage += HandleWeaponDamage;
@@ -500,8 +499,9 @@ namespace SimulationSessionSummary_NS
                 _mission.PhysicalEntities.CollectionChanged -= HandleEntityChanges;
 
                 //_mission.PlatformMotionComplete -= HandlePlatformMotionComplete;
-                //_mission.WeaponDetonation -= HandleWeaponDetonated;
-                //_mission.WeaponFire -= HandleWeaponFire;
+                _mission.WeaponDetonation -= HandleWeaponDetonated;
+                _mission.WeaponFire -= HandleWeaponFire;
+                _mission.WeaponDamage -= HandleWeaponDamage;
 
                 // BE SURE TO CANCEL ANY THREADS AND TIMERS
                 // OR CLEAN UP OBJECT ALLOCATIONS HERE!!
@@ -532,46 +532,6 @@ namespace SimulationSessionSummary_NS
             catch (Exception ex)
             {
                 Debug.WriteLine(ex.Message);
-            }
-        }
-
-        /// <summary>
-        /// Create entity button click event handler. 
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void btnCreateEntity_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                // It's not an uncommon aim of plugin developers to create entities or to modify 
-                // entity parameters when certain events or user input occur. This
-                // button handler spawns an Airbus at the mission centroid on click. 
-
-                IGeoPoint mapCenter = _mission.Map.Centroid;
-
-                IMissionCommands.ModelAndTypeStructure aircraftMACEType;
-                aircraftMACEType.Model = IMissionCommands.ModelAndTypeStructure.ModelTypes.Platform;
-                aircraftMACEType.Type = "Airbus";
-
-                IPhysicalEntity newPlatform = _mission.MissionCommands.CreateEntity(aircraftMACEType, mapCenter, "");
-
-                // you can control parameters for the new entity by casting it to an IPhysicalEntityController. 
-                // It's generally good practice to ensure the previous action was successful.
-
-                IPhysicalEntityController ipc = (IPhysicalEntityController)newPlatform;
-
-                // adjust the altitude to 20,000', using the double extension in BSI.SimulationLibrary.Formulas
-                // to convert from feet to meters. 
-
-                ipc.AdjustAltitude_m((20000.0).FtToMeters());
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex.Message);
-
-                // or write to mission log: 
-                _mission.Logger.ErrorMessage(ex);
             }
         }
         #endregion

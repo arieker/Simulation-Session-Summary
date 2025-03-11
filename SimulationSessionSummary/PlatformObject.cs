@@ -89,6 +89,7 @@ namespace SimulationSessionSummary_NS
 
         public int FiredWeaponsCount => weaponObjects.Count(w => w.Fired);
 
+        [Browsable(false)]
         public GunObject Gun
         {
             get => _gun;

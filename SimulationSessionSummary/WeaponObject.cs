@@ -13,11 +13,13 @@ namespace SimulationSessionSummary_NS
 
         public string Name { get; set; }
         public string Type { get; set; }
+        [Browsable(false)]
         public string OwnshipName { get; set; }
         public string TargetName { get; set; }
+        [Browsable(false)]
         public ulong InstanceID { get; set; }
-        public double TargetLat { get; set; }
         public double TargetLon { get; set; }
+        public double TargetLat { get; set; }
 
         public bool Fired
         {
