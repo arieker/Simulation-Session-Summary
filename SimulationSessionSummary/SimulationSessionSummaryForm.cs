@@ -20,6 +20,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.Serialization;
 using System.Collections.ObjectModel;
+using System.Windows.Forms.DataVisualization.Charting;
 
 namespace SimulationSessionSummary_NS
 {
@@ -134,6 +135,9 @@ namespace SimulationSessionSummary_NS
             platformObjects.SelectMany(p => p.GunObjects).FirstOrDefault(g => g._name == name);
 
         // Team related helper functions
+        private int GetTeamKills(int team) =>
+            platformObjects.Where(p => p.Team == team).Sum(p => p.Kills);
+
         // Weapons
         private List<WeaponObject> GetTeamAllWeaponsList(int team) =>
             platformObjects.Where(p => p.Team == team)
@@ -259,6 +263,43 @@ namespace SimulationSessionSummary_NS
             int spaceRedPlatforms = GetTeamSpacePlatformsList(2).Count;
             Debug.WriteLine(spaceRedPlatforms > 0 ? (aliveSpaceRedPlatforms / (double)spaceRedPlatforms) * 100 : 0);
 
+            UpdateCharts();
+        }
+
+        private void UpdateCharts()
+        {
+            // Calculate kills
+            int blueTeamKills = GetTeamKills(1);
+            int redTeamKills = GetTeamKills(2);
+
+            // Clear existing series
+            chart1.Series.Clear();
+
+            // Create a new series for kills, using vertical columns
+            Series killsSeries = new Series("Team Kills")
+            {
+                ChartType = SeriesChartType.Column
+            };
+
+            Debug.WriteLine($"Blue kills: {blueTeamKills}, Red kills: {redTeamKills}");
+
+            // Add data points
+            killsSeries.Points.AddXY("Blue Team", blueTeamKills);
+            killsSeries.Points.AddXY("Red Team", redTeamKills);
+
+            killsSeries.Points[0].Color = Color.Blue;
+            killsSeries.Points[1].Color = Color.Red;
+
+            // Add the series to the chart
+            chart1.Series.Add(killsSeries);
+
+            // Configure axes (optional)
+            chart1.ChartAreas[0].AxisY.Title = "Kills";
+            chart1.ChartAreas[0].AxisX.Title = "Team";
+            chart1.ChartAreas[0].AxisY.Minimum = 0;
+            chart1.ChartAreas[0].AxisX.Interval = 1;
+
+            chart1.Update();
         }
 
         private void InitUI()

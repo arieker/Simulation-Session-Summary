@@ -54,6 +54,7 @@ namespace SimulationSessionSummary_NS
         public int Kills => KilledPlatforms.Count;
 
         [Browsable(false)]
+        [XmlIgnore]
         public List<ulong> ActiveBulletEntityIDs { get; set; } = new List<ulong>();
 
         public void RegisterBulletHit(PlatformObject hitPlatform)
