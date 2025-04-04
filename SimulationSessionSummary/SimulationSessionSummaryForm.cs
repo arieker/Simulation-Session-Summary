@@ -38,6 +38,12 @@ namespace SimulationSessionSummary_NS
         private SortableBindingList<PhysicalEntityWrapper> _userSelectedEntities = new SortableBindingList<PhysicalEntityWrapper>();
         private BindingList<PlatformObject> platformObjects = new BindingList<PlatformObject>();
 
+        //variables for charts
+        private List<(DateTime Timestamp, int BlueKills, int RedKills)> killHistory = new List<(DateTime, int, int)>();
+        private DateTime simulationStartTime;
+        private Timer killHistoryTimer;
+
+
         // These two lists are READ ONLY!!! And update automatically
         // The point of them is to be used as a very convenient DataSource for dataGridViews while still keeping one main list for convenience
         private List<PlatformObject> team1Platforms => platformObjects.Where(p => p.Team == 1).ToList();
@@ -268,39 +274,128 @@ namespace SimulationSessionSummary_NS
 
         private void UpdateCharts()
         {
-            // Calculate kills
+            // Avoid crashing on form close
+            if (chart1 == null || chart1.IsDisposed || chart2 == null || chart2.IsDisposed)
+                return;
+
+            // === BAR CHART (chart1): Current Kills ===
             int blueTeamKills = GetTeamKills(1);
             int redTeamKills = GetTeamKills(2);
 
-            // Clear existing series
             chart1.Series.Clear();
 
-            // Create a new series for kills, using vertical columns
             Series killsSeries = new Series("Team Kills")
             {
                 ChartType = SeriesChartType.Column
             };
 
-            Debug.WriteLine($"Blue kills: {blueTeamKills}, Red kills: {redTeamKills}");
-
-            // Add data points
             killsSeries.Points.AddXY("Blue Team", blueTeamKills);
             killsSeries.Points.AddXY("Red Team", redTeamKills);
-
             killsSeries.Points[0].Color = Color.Blue;
             killsSeries.Points[1].Color = Color.Red;
 
-            // Add the series to the chart
             chart1.Series.Add(killsSeries);
 
-            // Configure axes (optional)
-            chart1.ChartAreas[0].AxisY.Title = "Kills";
-            chart1.ChartAreas[0].AxisX.Title = "Team";
-            chart1.ChartAreas[0].AxisY.Minimum = 0;
-            chart1.ChartAreas[0].AxisX.Interval = 1;
+            if (chart1.ChartAreas.Count == 0)
+                chart1.ChartAreas.Add(new ChartArea("Default"));
 
-            chart1.Update();
+            var area1 = chart1.ChartAreas[0];
+            area1.AxisX.Title = "Team";
+            area1.AxisY.Title = "Kills";
+            area1.AxisX.Interval = 1;
+
+            int maxKills = Math.Max(blueTeamKills, redTeamKills);
+            area1.AxisY.Minimum = 0;
+            area1.AxisY.Maximum = maxKills == 0 ? 1 : maxKills + 1;
+
+            chart1.Invalidate();
+
+            // === LINE CHART (chart2): Kills Over Time ===
+
+            if (simulationStartTime != default(DateTime))
+            {
+                killHistory.Add((DateTime.Now, blueTeamKills, redTeamKills));
+            }
+
+            if (chart2.ChartAreas.Count == 0)
+                chart2.ChartAreas.Add(new ChartArea("Main"));
+
+            var area2 = chart2.ChartAreas[0];
+            area2.AxisX.Title = "Time (s)";
+            area2.AxisY.Title = "Kills";
+
+            // Add chart title only once
+            if (chart2.Titles.Count == 0)
+            {
+                chart2.Titles.Add("Team Kills Over Time");
+                chart2.Titles[0].Font = new Font("Segoe UI", 10, FontStyle.Bold);
+                chart2.Titles[0].ForeColor = Color.DarkSlateGray;
+            }
+
+            // Ensure Blue Team series exists
+            Series blueSeries;
+            if (chart2.Series.IndexOf("Blue Team") >= 0)
+            {
+                blueSeries = chart2.Series["Blue Team"];
+                blueSeries.Points.Clear();
+            }
+            else
+            {
+                blueSeries = new Series("Blue Team")
+                {
+                    ChartType = SeriesChartType.Line,
+                    Color = Color.Blue
+                };
+                chart2.Series.Add(blueSeries);
+            }
+
+            // Ensure Red Team series exists
+            Series redSeries;
+            if (chart2.Series.IndexOf("Red Team") >= 0)
+            {
+                redSeries = chart2.Series["Red Team"];
+                redSeries.Points.Clear();
+            }
+            else
+            {
+                redSeries = new Series("Red Team")
+                {
+                    ChartType = SeriesChartType.Line,
+                    Color = Color.Red
+                };
+                chart2.Series.Add(redSeries);
+            }
+
+            foreach (var point in killHistory)
+            {
+                double timeSeconds = (point.Timestamp - simulationStartTime).TotalSeconds;
+                blueSeries.Points.AddXY(timeSeconds, point.BlueKills);
+                redSeries.Points.AddXY(timeSeconds, point.RedKills);
+            }
+
+            chart2.Invalidate();
         }
+
+
+
+        private void SetupKillHistoryTimer()
+        {
+            if (killHistoryTimer != null)
+            {
+                killHistoryTimer.Stop();
+                killHistoryTimer.Dispose();
+            }
+
+            killHistoryTimer = new Timer();
+            killHistoryTimer.Interval = 1000; // update every second
+            killHistoryTimer.Tick += (s, e) =>
+            {
+                updateMainStatistics(); // This will now call UpdateCharts and update both chart1 and chart2
+            };
+            killHistoryTimer.Start();
+        }
+
+
 
         private void InitUI()
         {
@@ -629,6 +724,13 @@ namespace SimulationSessionSummary_NS
         {
             try
             {
+                if (killHistoryTimer != null)
+                {
+                    killHistoryTimer.Stop();
+                    killHistoryTimer.Dispose();
+                    killHistoryTimer = null;
+                }
+
                 // Remove the handlers
                 _mission.StateChanged -= HandleScenarioStateChanges;
                 _mission.PhysicalEntities.CollectionChanged -= HandleEntityChanges;
@@ -759,6 +861,11 @@ namespace SimulationSessionSummary_NS
             InitUI();
             buttonStart.Enabled = false;
             buttonClearData.Enabled = true;
+
+            simulationStartTime = DateTime.Now;
+            killHistory.Clear();
+            SetupKillHistoryTimer();
+
             _mission.WeaponDetonation += HandleWeaponDetonated;
             _mission.WeaponFire += HandleWeaponFire;
             _mission.WeaponDamage += HandleWeaponDamage;
@@ -781,6 +888,14 @@ namespace SimulationSessionSummary_NS
 
             buttonStart.Enabled = true;
             buttonClearData.Enabled = false;
+
+            killHistoryTimer?.Stop();
+            killHistoryTimer?.Dispose();
+            killHistoryTimer = null;
+            killHistory.Clear();
+            chart2.Series.Clear();
+
+
             updateMainStatistics();
         }
 
