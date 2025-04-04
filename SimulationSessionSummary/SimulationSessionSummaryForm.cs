@@ -299,7 +299,16 @@ namespace SimulationSessionSummary_NS
             if (chart1.ChartAreas.Count == 0)
                 chart1.ChartAreas.Add(new ChartArea("Default"));
 
+            // Add chart title only once
+            if (chart1.Titles.Count == 0)
+            {
+                chart1.Titles.Add("Team Kills");
+                chart1.Titles[0].Font = new Font("Segoe UI", 10, FontStyle.Bold);
+                chart1.Titles[0].ForeColor = Color.DarkSlateGray;
+            }
+
             var area1 = chart1.ChartAreas[0];
+
             area1.AxisX.Title = "Team";
             area1.AxisY.Title = "Kills";
             area1.AxisX.Interval = 1;
