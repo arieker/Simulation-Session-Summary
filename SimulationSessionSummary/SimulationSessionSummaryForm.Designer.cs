@@ -49,11 +49,11 @@ namespace SimulationSessionSummary_NS
             System.Windows.Forms.DataVisualization.Charting.Series series6 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.tabPageGraphs = new System.Windows.Forms.TabPage();
             this.tabControlTeamsGraphs = new System.Windows.Forms.TabControl();
-            this.tabPageTeamBlueGraphs = new System.Windows.Forms.TabPage();
+            this.tabPageTeams = new System.Windows.Forms.TabPage();
             this.chart2 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.chart3 = new System.Windows.Forms.DataVisualization.Charting.Chart();
-            this.tabPageTeamRedGraphs = new System.Windows.Forms.TabPage();
+            this.tabPageIndividuals = new System.Windows.Forms.TabPage();
             this.chart5 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.chart4 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.chart6 = new System.Windows.Forms.DataVisualization.Charting.Chart();
@@ -75,19 +75,13 @@ namespace SimulationSessionSummary_NS
             this.labelBlueTeam = new System.Windows.Forms.Label();
             this.dataGridViewMainPage = new System.Windows.Forms.DataGridView();
             this.tabControlMain = new System.Windows.Forms.TabControl();
-            this.tabPage3 = new System.Windows.Forms.TabPage();
-            this.tabControlTeamsPlanes = new System.Windows.Forms.TabControl();
-            this.tabPageTeamBluePlanes = new System.Windows.Forms.TabPage();
-            this.tabControlTeamBluePlanes = new System.Windows.Forms.TabControl();
-            this.tabPageTeamRedPlanes = new System.Windows.Forms.TabPage();
-            this.tabControlTeamRedPlanes = new System.Windows.Forms.TabControl();
             this.tabPageGraphs.SuspendLayout();
             this.tabControlTeamsGraphs.SuspendLayout();
-            this.tabPageTeamBlueGraphs.SuspendLayout();
+            this.tabPageTeams.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.chart2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.chart3)).BeginInit();
-            this.tabPageTeamRedGraphs.SuspendLayout();
+            this.tabPageIndividuals.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.chart5)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.chart4)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.chart6)).BeginInit();
@@ -99,48 +93,41 @@ namespace SimulationSessionSummary_NS
             this.groupBoxMainStatistics.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewMainPage)).BeginInit();
             this.tabControlMain.SuspendLayout();
-            this.tabPage3.SuspendLayout();
-            this.tabControlTeamsPlanes.SuspendLayout();
-            this.tabPageTeamBluePlanes.SuspendLayout();
-            this.tabPageTeamRedPlanes.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabPageGraphs
             // 
             this.tabPageGraphs.Controls.Add(this.tabControlTeamsGraphs);
-            this.tabPageGraphs.Location = new System.Drawing.Point(4, 29);
-            this.tabPageGraphs.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.tabPageGraphs.Location = new System.Drawing.Point(4, 22);
             this.tabPageGraphs.Name = "tabPageGraphs";
-            this.tabPageGraphs.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.tabPageGraphs.Size = new System.Drawing.Size(1440, 1033);
+            this.tabPageGraphs.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            this.tabPageGraphs.Size = new System.Drawing.Size(957, 667);
             this.tabPageGraphs.TabIndex = 1;
             this.tabPageGraphs.Text = "Graphs";
             this.tabPageGraphs.UseVisualStyleBackColor = true;
             // 
             // tabControlTeamsGraphs
             // 
-            this.tabControlTeamsGraphs.Controls.Add(this.tabPageTeamBlueGraphs);
-            this.tabControlTeamsGraphs.Controls.Add(this.tabPageTeamRedGraphs);
+            this.tabControlTeamsGraphs.Controls.Add(this.tabPageTeams);
+            this.tabControlTeamsGraphs.Controls.Add(this.tabPageIndividuals);
             this.tabControlTeamsGraphs.Location = new System.Drawing.Point(0, 0);
-            this.tabControlTeamsGraphs.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.tabControlTeamsGraphs.Name = "tabControlTeamsGraphs";
             this.tabControlTeamsGraphs.SelectedIndex = 0;
-            this.tabControlTeamsGraphs.Size = new System.Drawing.Size(1442, 1032);
+            this.tabControlTeamsGraphs.Size = new System.Drawing.Size(961, 671);
             this.tabControlTeamsGraphs.TabIndex = 1;
             // 
-            // tabPageTeamBlueGraphs
+            // tabPageTeams
             // 
-            this.tabPageTeamBlueGraphs.Controls.Add(this.chart2);
-            this.tabPageTeamBlueGraphs.Controls.Add(this.chart1);
-            this.tabPageTeamBlueGraphs.Controls.Add(this.chart3);
-            this.tabPageTeamBlueGraphs.Location = new System.Drawing.Point(4, 29);
-            this.tabPageTeamBlueGraphs.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.tabPageTeamBlueGraphs.Name = "tabPageTeamBlueGraphs";
-            this.tabPageTeamBlueGraphs.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.tabPageTeamBlueGraphs.Size = new System.Drawing.Size(1434, 999);
-            this.tabPageTeamBlueGraphs.TabIndex = 0;
-            this.tabPageTeamBlueGraphs.Text = "Team Blue";
-            this.tabPageTeamBlueGraphs.UseVisualStyleBackColor = true;
+            this.tabPageTeams.Controls.Add(this.chart2);
+            this.tabPageTeams.Controls.Add(this.chart1);
+            this.tabPageTeams.Controls.Add(this.chart3);
+            this.tabPageTeams.Location = new System.Drawing.Point(4, 22);
+            this.tabPageTeams.Name = "tabPageTeams";
+            this.tabPageTeams.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            this.tabPageTeams.Size = new System.Drawing.Size(953, 645);
+            this.tabPageTeams.TabIndex = 0;
+            this.tabPageTeams.Text = "Teams";
+            this.tabPageTeams.UseVisualStyleBackColor = true;
             // 
             // chart2
             // 
@@ -148,14 +135,13 @@ namespace SimulationSessionSummary_NS
             this.chart2.ChartAreas.Add(chartArea1);
             legend1.Name = "Legend1";
             this.chart2.Legends.Add(legend1);
-            this.chart2.Location = new System.Drawing.Point(468, 9);
-            this.chart2.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.chart2.Location = new System.Drawing.Point(312, 6);
             this.chart2.Name = "chart2";
             series1.ChartArea = "ChartArea1";
             series1.Legend = "Legend1";
             series1.Name = "Series1";
             this.chart2.Series.Add(series1);
-            this.chart2.Size = new System.Drawing.Size(450, 462);
+            this.chart2.Size = new System.Drawing.Size(300, 300);
             this.chart2.TabIndex = 2;
             this.chart2.Text = "chart2";
             // 
@@ -165,14 +151,13 @@ namespace SimulationSessionSummary_NS
             this.chart1.ChartAreas.Add(chartArea2);
             legend2.Name = "Legend1";
             this.chart1.Legends.Add(legend2);
-            this.chart1.Location = new System.Drawing.Point(9, 9);
-            this.chart1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.chart1.Location = new System.Drawing.Point(6, 6);
             this.chart1.Name = "chart1";
             series2.ChartArea = "ChartArea1";
             series2.Legend = "Legend1";
             series2.Name = "Series1";
             this.chart1.Series.Add(series2);
-            this.chart1.Size = new System.Drawing.Size(450, 462);
+            this.chart1.Size = new System.Drawing.Size(300, 300);
             this.chart1.TabIndex = 1;
             this.chart1.Text = "chart2";
             // 
@@ -182,30 +167,28 @@ namespace SimulationSessionSummary_NS
             this.chart3.ChartAreas.Add(chartArea3);
             legend3.Name = "Legend1";
             this.chart3.Legends.Add(legend3);
-            this.chart3.Location = new System.Drawing.Point(970, 9);
-            this.chart3.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.chart3.Location = new System.Drawing.Point(647, 6);
             this.chart3.Name = "chart3";
             series3.ChartArea = "ChartArea1";
             series3.Legend = "Legend1";
             series3.Name = "Series1";
             this.chart3.Series.Add(series3);
-            this.chart3.Size = new System.Drawing.Size(450, 462);
+            this.chart3.Size = new System.Drawing.Size(300, 300);
             this.chart3.TabIndex = 0;
             this.chart3.Text = "chart1";
             // 
-            // tabPageTeamRedGraphs
+            // tabPageIndividuals
             // 
-            this.tabPageTeamRedGraphs.Controls.Add(this.chart5);
-            this.tabPageTeamRedGraphs.Controls.Add(this.chart4);
-            this.tabPageTeamRedGraphs.Controls.Add(this.chart6);
-            this.tabPageTeamRedGraphs.Location = new System.Drawing.Point(4, 29);
-            this.tabPageTeamRedGraphs.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.tabPageTeamRedGraphs.Name = "tabPageTeamRedGraphs";
-            this.tabPageTeamRedGraphs.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.tabPageTeamRedGraphs.Size = new System.Drawing.Size(1434, 999);
-            this.tabPageTeamRedGraphs.TabIndex = 1;
-            this.tabPageTeamRedGraphs.Text = "Team Red";
-            this.tabPageTeamRedGraphs.UseVisualStyleBackColor = true;
+            this.tabPageIndividuals.Controls.Add(this.chart5);
+            this.tabPageIndividuals.Controls.Add(this.chart4);
+            this.tabPageIndividuals.Controls.Add(this.chart6);
+            this.tabPageIndividuals.Location = new System.Drawing.Point(4, 22);
+            this.tabPageIndividuals.Name = "tabPageIndividuals";
+            this.tabPageIndividuals.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            this.tabPageIndividuals.Size = new System.Drawing.Size(953, 645);
+            this.tabPageIndividuals.TabIndex = 1;
+            this.tabPageIndividuals.Text = "Individuals";
+            this.tabPageIndividuals.UseVisualStyleBackColor = true;
             // 
             // chart5
             // 
@@ -213,14 +196,13 @@ namespace SimulationSessionSummary_NS
             this.chart5.ChartAreas.Add(chartArea4);
             legend4.Name = "Legend1";
             this.chart5.Legends.Add(legend4);
-            this.chart5.Location = new System.Drawing.Point(512, 9);
-            this.chart5.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.chart5.Location = new System.Drawing.Point(341, 6);
             this.chart5.Name = "chart5";
             series4.ChartArea = "ChartArea1";
             series4.Legend = "Legend1";
             series4.Name = "Series1";
             this.chart5.Series.Add(series4);
-            this.chart5.Size = new System.Drawing.Size(450, 462);
+            this.chart5.Size = new System.Drawing.Size(300, 300);
             this.chart5.TabIndex = 3;
             this.chart5.Text = "chart2";
             // 
@@ -230,14 +212,13 @@ namespace SimulationSessionSummary_NS
             this.chart4.ChartAreas.Add(chartArea5);
             legend5.Name = "Legend1";
             this.chart4.Legends.Add(legend5);
-            this.chart4.Location = new System.Drawing.Point(9, 9);
-            this.chart4.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.chart4.Location = new System.Drawing.Point(6, 6);
             this.chart4.Name = "chart4";
             series5.ChartArea = "ChartArea1";
             series5.Legend = "Legend1";
             series5.Name = "Series1";
             this.chart4.Series.Add(series5);
-            this.chart4.Size = new System.Drawing.Size(450, 462);
+            this.chart4.Size = new System.Drawing.Size(300, 300);
             this.chart4.TabIndex = 2;
             this.chart4.Text = "chart2";
             // 
@@ -247,25 +228,23 @@ namespace SimulationSessionSummary_NS
             this.chart6.ChartAreas.Add(chartArea6);
             legend6.Name = "Legend1";
             this.chart6.Legends.Add(legend6);
-            this.chart6.Location = new System.Drawing.Point(970, 9);
-            this.chart6.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.chart6.Location = new System.Drawing.Point(647, 6);
             this.chart6.Name = "chart6";
             series6.ChartArea = "ChartArea1";
             series6.Legend = "Legend1";
             series6.Name = "Series1";
             this.chart6.Series.Add(series6);
-            this.chart6.Size = new System.Drawing.Size(450, 462);
+            this.chart6.Size = new System.Drawing.Size(300, 300);
             this.chart6.TabIndex = 1;
             this.chart6.Text = "chart2";
             // 
             // tabPageMain
             // 
             this.tabPageMain.Controls.Add(this.splitContainerMain);
-            this.tabPageMain.Location = new System.Drawing.Point(4, 29);
-            this.tabPageMain.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.tabPageMain.Location = new System.Drawing.Point(4, 22);
             this.tabPageMain.Name = "tabPageMain";
-            this.tabPageMain.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.tabPageMain.Size = new System.Drawing.Size(1440, 1033);
+            this.tabPageMain.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            this.tabPageMain.Size = new System.Drawing.Size(957, 667);
             this.tabPageMain.TabIndex = 0;
             this.tabPageMain.Text = "Main";
             this.tabPageMain.UseVisualStyleBackColor = true;
@@ -274,8 +253,7 @@ namespace SimulationSessionSummary_NS
             // 
             this.splitContainerMain.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainerMain.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
-            this.splitContainerMain.Location = new System.Drawing.Point(4, 5);
-            this.splitContainerMain.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.splitContainerMain.Location = new System.Drawing.Point(3, 3);
             this.splitContainerMain.Name = "splitContainerMain";
             // 
             // splitContainerMain.Panel1
@@ -290,28 +268,25 @@ namespace SimulationSessionSummary_NS
             // splitContainerMain.Panel2
             // 
             this.splitContainerMain.Panel2.Controls.Add(this.dataGridViewMainPage);
-            this.splitContainerMain.Size = new System.Drawing.Size(1432, 1023);
+            this.splitContainerMain.Size = new System.Drawing.Size(951, 661);
             this.splitContainerMain.SplitterDistance = 250;
-            this.splitContainerMain.SplitterWidth = 6;
             this.splitContainerMain.TabIndex = 21;
             // 
             // labelLoadXML
             // 
             this.labelLoadXML.AutoSize = true;
-            this.labelLoadXML.Location = new System.Drawing.Point(16, 94);
-            this.labelLoadXML.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.labelLoadXML.Location = new System.Drawing.Point(11, 61);
             this.labelLoadXML.Name = "labelLoadXML";
-            this.labelLoadXML.Size = new System.Drawing.Size(341, 20);
+            this.labelLoadXML.Size = new System.Drawing.Size(231, 13);
             this.labelLoadXML.TabIndex = 21;
             this.labelLoadXML.Text = "Loading XML Data is for viewing purposes only!";
             // 
             // buttonClearData
             // 
             this.buttonClearData.Enabled = false;
-            this.buttonClearData.Location = new System.Drawing.Point(8, 54);
-            this.buttonClearData.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.buttonClearData.Location = new System.Drawing.Point(5, 35);
             this.buttonClearData.Name = "buttonClearData";
-            this.buttonClearData.Size = new System.Drawing.Size(112, 35);
+            this.buttonClearData.Size = new System.Drawing.Size(75, 23);
             this.buttonClearData.TabIndex = 20;
             this.buttonClearData.Text = "Clear Data";
             this.buttonClearData.UseVisualStyleBackColor = true;
@@ -319,10 +294,9 @@ namespace SimulationSessionSummary_NS
             // 
             // buttonLoadXML
             // 
-            this.buttonLoadXML.Location = new System.Drawing.Point(250, 54);
-            this.buttonLoadXML.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.buttonLoadXML.Location = new System.Drawing.Point(167, 35);
             this.buttonLoadXML.Name = "buttonLoadXML";
-            this.buttonLoadXML.Size = new System.Drawing.Size(112, 35);
+            this.buttonLoadXML.Size = new System.Drawing.Size(75, 23);
             this.buttonLoadXML.TabIndex = 19;
             this.buttonLoadXML.Text = "Load XML";
             this.buttonLoadXML.UseVisualStyleBackColor = true;
@@ -330,10 +304,9 @@ namespace SimulationSessionSummary_NS
             // 
             // buttonStart
             // 
-            this.buttonStart.Location = new System.Drawing.Point(8, 9);
-            this.buttonStart.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.buttonStart.Location = new System.Drawing.Point(5, 6);
             this.buttonStart.Name = "buttonStart";
-            this.buttonStart.Size = new System.Drawing.Size(112, 35);
+            this.buttonStart.Size = new System.Drawing.Size(75, 23);
             this.buttonStart.TabIndex = 16;
             this.buttonStart.Text = "Start";
             this.buttonStart.UseVisualStyleBackColor = true;
@@ -341,10 +314,9 @@ namespace SimulationSessionSummary_NS
             // 
             // buttonSaveXML
             // 
-            this.buttonSaveXML.Location = new System.Drawing.Point(250, 9);
-            this.buttonSaveXML.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.buttonSaveXML.Location = new System.Drawing.Point(167, 6);
             this.buttonSaveXML.Name = "buttonSaveXML";
-            this.buttonSaveXML.Size = new System.Drawing.Size(112, 35);
+            this.buttonSaveXML.Size = new System.Drawing.Size(75, 23);
             this.buttonSaveXML.TabIndex = 17;
             this.buttonSaveXML.Text = "Save XML";
             this.buttonSaveXML.UseVisualStyleBackColor = true;
@@ -360,11 +332,9 @@ namespace SimulationSessionSummary_NS
             this.groupBoxMainStatistics.Controls.Add(this.labelAliveEntities);
             this.groupBoxMainStatistics.Controls.Add(this.labelRedTeam);
             this.groupBoxMainStatistics.Controls.Add(this.labelBlueTeam);
-            this.groupBoxMainStatistics.Location = new System.Drawing.Point(8, 118);
-            this.groupBoxMainStatistics.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.groupBoxMainStatistics.Location = new System.Drawing.Point(5, 77);
             this.groupBoxMainStatistics.Name = "groupBoxMainStatistics";
-            this.groupBoxMainStatistics.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.groupBoxMainStatistics.Size = new System.Drawing.Size(342, 271);
+            this.groupBoxMainStatistics.Size = new System.Drawing.Size(228, 176);
             this.groupBoxMainStatistics.TabIndex = 18;
             this.groupBoxMainStatistics.TabStop = false;
             this.groupBoxMainStatistics.Text = "Main Statistics";
@@ -372,80 +342,72 @@ namespace SimulationSessionSummary_NS
             // labelRedTeamRemainingWeapons
             // 
             this.labelRedTeamRemainingWeapons.AutoSize = true;
-            this.labelRedTeamRemainingWeapons.Location = new System.Drawing.Point(204, 171);
-            this.labelRedTeamRemainingWeapons.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.labelRedTeamRemainingWeapons.Location = new System.Drawing.Point(136, 111);
             this.labelRedTeamRemainingWeapons.Name = "labelRedTeamRemainingWeapons";
-            this.labelRedTeamRemainingWeapons.Size = new System.Drawing.Size(18, 20);
+            this.labelRedTeamRemainingWeapons.Size = new System.Drawing.Size(13, 13);
             this.labelRedTeamRemainingWeapons.TabIndex = 7;
             this.labelRedTeamRemainingWeapons.Text = "0";
             // 
             // labelBlueTeamRemainingWeapons
             // 
             this.labelBlueTeamRemainingWeapons.AutoSize = true;
-            this.labelBlueTeamRemainingWeapons.Location = new System.Drawing.Point(14, 171);
-            this.labelBlueTeamRemainingWeapons.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.labelBlueTeamRemainingWeapons.Location = new System.Drawing.Point(9, 111);
             this.labelBlueTeamRemainingWeapons.Name = "labelBlueTeamRemainingWeapons";
-            this.labelBlueTeamRemainingWeapons.Size = new System.Drawing.Size(18, 20);
+            this.labelBlueTeamRemainingWeapons.Size = new System.Drawing.Size(13, 13);
             this.labelBlueTeamRemainingWeapons.TabIndex = 6;
             this.labelBlueTeamRemainingWeapons.Text = "0";
             // 
             // labelRemainingWeapons
             // 
             this.labelRemainingWeapons.AutoSize = true;
-            this.labelRemainingWeapons.Location = new System.Drawing.Point(64, 112);
-            this.labelRemainingWeapons.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.labelRemainingWeapons.Location = new System.Drawing.Point(43, 73);
             this.labelRemainingWeapons.Name = "labelRemainingWeapons";
-            this.labelRemainingWeapons.Size = new System.Drawing.Size(157, 20);
+            this.labelRemainingWeapons.Size = new System.Drawing.Size(106, 13);
             this.labelRemainingWeapons.TabIndex = 5;
             this.labelRemainingWeapons.Text = "Remaining Weapons";
             // 
             // labelRedTeamAliveEntities
             // 
             this.labelRedTeamAliveEntities.AutoSize = true;
-            this.labelRedTeamAliveEntities.Location = new System.Drawing.Point(204, 72);
-            this.labelRedTeamAliveEntities.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.labelRedTeamAliveEntities.Location = new System.Drawing.Point(136, 47);
             this.labelRedTeamAliveEntities.Name = "labelRedTeamAliveEntities";
-            this.labelRedTeamAliveEntities.Size = new System.Drawing.Size(18, 20);
+            this.labelRedTeamAliveEntities.Size = new System.Drawing.Size(13, 13);
             this.labelRedTeamAliveEntities.TabIndex = 4;
             this.labelRedTeamAliveEntities.Text = "0";
             // 
             // labelBlueTeamAliveEntities
             // 
             this.labelBlueTeamAliveEntities.AutoSize = true;
-            this.labelBlueTeamAliveEntities.Location = new System.Drawing.Point(14, 72);
-            this.labelBlueTeamAliveEntities.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.labelBlueTeamAliveEntities.Location = new System.Drawing.Point(9, 47);
             this.labelBlueTeamAliveEntities.Name = "labelBlueTeamAliveEntities";
-            this.labelBlueTeamAliveEntities.Size = new System.Drawing.Size(18, 20);
+            this.labelBlueTeamAliveEntities.Size = new System.Drawing.Size(13, 13);
             this.labelBlueTeamAliveEntities.TabIndex = 3;
             this.labelBlueTeamAliveEntities.Text = "0";
             // 
             // labelAliveEntities
             // 
             this.labelAliveEntities.AutoSize = true;
-            this.labelAliveEntities.Location = new System.Drawing.Point(94, 45);
-            this.labelAliveEntities.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.labelAliveEntities.Location = new System.Drawing.Point(63, 29);
             this.labelAliveEntities.Name = "labelAliveEntities";
-            this.labelAliveEntities.Size = new System.Drawing.Size(99, 20);
+            this.labelAliveEntities.Size = new System.Drawing.Size(67, 13);
             this.labelAliveEntities.TabIndex = 2;
             this.labelAliveEntities.Text = "Alive Entities";
             // 
             // labelRedTeam
             // 
             this.labelRedTeam.AutoSize = true;
-            this.labelRedTeam.Location = new System.Drawing.Point(204, 25);
-            this.labelRedTeam.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.labelRedTeam.Location = new System.Drawing.Point(136, 16);
             this.labelRedTeam.Name = "labelRedTeam";
-            this.labelRedTeam.Size = new System.Drawing.Size(83, 20);
+            this.labelRedTeam.Size = new System.Drawing.Size(57, 13);
             this.labelRedTeam.TabIndex = 1;
             this.labelRedTeam.Text = "Red Team";
             // 
             // labelBlueTeam
             // 
             this.labelBlueTeam.AutoSize = true;
-            this.labelBlueTeam.Location = new System.Drawing.Point(9, 25);
-            this.labelBlueTeam.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.labelBlueTeam.Location = new System.Drawing.Point(6, 16);
             this.labelBlueTeam.Name = "labelBlueTeam";
-            this.labelBlueTeam.Size = new System.Drawing.Size(85, 20);
+            this.labelBlueTeam.Size = new System.Drawing.Size(58, 13);
             this.labelBlueTeam.TabIndex = 0;
             this.labelBlueTeam.Text = "Blue Team";
             // 
@@ -455,109 +417,38 @@ namespace SimulationSessionSummary_NS
             this.dataGridViewMainPage.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridViewMainPage.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridViewMainPage.Location = new System.Drawing.Point(0, 0);
-            this.dataGridViewMainPage.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.dataGridViewMainPage.Name = "dataGridViewMainPage";
             this.dataGridViewMainPage.ReadOnly = true;
             this.dataGridViewMainPage.RowHeadersWidth = 62;
-            this.dataGridViewMainPage.Size = new System.Drawing.Size(1176, 1023);
+            this.dataGridViewMainPage.Size = new System.Drawing.Size(697, 661);
             this.dataGridViewMainPage.TabIndex = 20;
             // 
             // tabControlMain
             // 
             this.tabControlMain.Controls.Add(this.tabPageMain);
             this.tabControlMain.Controls.Add(this.tabPageGraphs);
-            this.tabControlMain.Controls.Add(this.tabPage3);
             this.tabControlMain.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControlMain.Location = new System.Drawing.Point(0, 0);
-            this.tabControlMain.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.tabControlMain.Name = "tabControlMain";
             this.tabControlMain.SelectedIndex = 0;
-            this.tabControlMain.Size = new System.Drawing.Size(1448, 1066);
+            this.tabControlMain.Size = new System.Drawing.Size(965, 693);
             this.tabControlMain.TabIndex = 19;
-            // 
-            // tabPage3
-            // 
-            this.tabPage3.Controls.Add(this.tabControlTeamsPlanes);
-            this.tabPage3.Location = new System.Drawing.Point(4, 29);
-            this.tabPage3.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(1440, 1033);
-            this.tabPage3.TabIndex = 2;
-            this.tabPage3.Text = "Individual Planes";
-            this.tabPage3.UseVisualStyleBackColor = true;
-            // 
-            // tabControlTeamsPlanes
-            // 
-            this.tabControlTeamsPlanes.Controls.Add(this.tabPageTeamBluePlanes);
-            this.tabControlTeamsPlanes.Controls.Add(this.tabPageTeamRedPlanes);
-            this.tabControlTeamsPlanes.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tabControlTeamsPlanes.Location = new System.Drawing.Point(0, 0);
-            this.tabControlTeamsPlanes.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.tabControlTeamsPlanes.Name = "tabControlTeamsPlanes";
-            this.tabControlTeamsPlanes.SelectedIndex = 0;
-            this.tabControlTeamsPlanes.Size = new System.Drawing.Size(1440, 1033);
-            this.tabControlTeamsPlanes.TabIndex = 0;
-            // 
-            // tabPageTeamBluePlanes
-            // 
-            this.tabPageTeamBluePlanes.Controls.Add(this.tabControlTeamBluePlanes);
-            this.tabPageTeamBluePlanes.Location = new System.Drawing.Point(4, 29);
-            this.tabPageTeamBluePlanes.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.tabPageTeamBluePlanes.Name = "tabPageTeamBluePlanes";
-            this.tabPageTeamBluePlanes.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.tabPageTeamBluePlanes.Size = new System.Drawing.Size(1432, 1000);
-            this.tabPageTeamBluePlanes.TabIndex = 1;
-            this.tabPageTeamBluePlanes.Text = "Team Blue";
-            this.tabPageTeamBluePlanes.UseVisualStyleBackColor = true;
-            // 
-            // tabControlTeamBluePlanes
-            // 
-            this.tabControlTeamBluePlanes.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tabControlTeamBluePlanes.Location = new System.Drawing.Point(4, 5);
-            this.tabControlTeamBluePlanes.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.tabControlTeamBluePlanes.Name = "tabControlTeamBluePlanes";
-            this.tabControlTeamBluePlanes.SelectedIndex = 0;
-            this.tabControlTeamBluePlanes.Size = new System.Drawing.Size(1424, 990);
-            this.tabControlTeamBluePlanes.TabIndex = 0;
-            // 
-            // tabPageTeamRedPlanes
-            // 
-            this.tabPageTeamRedPlanes.Controls.Add(this.tabControlTeamRedPlanes);
-            this.tabPageTeamRedPlanes.Location = new System.Drawing.Point(4, 29);
-            this.tabPageTeamRedPlanes.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.tabPageTeamRedPlanes.Name = "tabPageTeamRedPlanes";
-            this.tabPageTeamRedPlanes.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.tabPageTeamRedPlanes.Size = new System.Drawing.Size(1428, 993);
-            this.tabPageTeamRedPlanes.TabIndex = 2;
-            this.tabPageTeamRedPlanes.Text = "Team Red";
-            this.tabPageTeamRedPlanes.UseVisualStyleBackColor = true;
-            // 
-            // tabControlTeamRedPlanes
-            // 
-            this.tabControlTeamRedPlanes.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tabControlTeamRedPlanes.Location = new System.Drawing.Point(4, 5);
-            this.tabControlTeamRedPlanes.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.tabControlTeamRedPlanes.Name = "tabControlTeamRedPlanes";
-            this.tabControlTeamRedPlanes.SelectedIndex = 0;
-            this.tabControlTeamRedPlanes.Size = new System.Drawing.Size(1420, 983);
-            this.tabControlTeamRedPlanes.TabIndex = 0;
             // 
             // SimulationSessionSummaryForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1448, 1066);
+            this.ClientSize = new System.Drawing.Size(965, 693);
             this.Controls.Add(this.tabControlMain);
-            this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.Name = "SimulationSessionSummaryForm";
             this.Text = "Simulation Session Summary";
             this.tabPageGraphs.ResumeLayout(false);
             this.tabControlTeamsGraphs.ResumeLayout(false);
-            this.tabPageTeamBlueGraphs.ResumeLayout(false);
+            this.tabPageTeams.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.chart2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.chart3)).EndInit();
-            this.tabPageTeamRedGraphs.ResumeLayout(false);
+            this.tabPageIndividuals.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.chart5)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.chart4)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.chart6)).EndInit();
@@ -571,10 +462,6 @@ namespace SimulationSessionSummary_NS
             this.groupBoxMainStatistics.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewMainPage)).EndInit();
             this.tabControlMain.ResumeLayout(false);
-            this.tabPage3.ResumeLayout(false);
-            this.tabControlTeamsPlanes.ResumeLayout(false);
-            this.tabPageTeamBluePlanes.ResumeLayout(false);
-            this.tabPageTeamRedPlanes.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -598,20 +485,14 @@ namespace SimulationSessionSummary_NS
         private System.Windows.Forms.Label labelBlueTeam;
         private System.Windows.Forms.TabControl tabControlMain;
         private System.Windows.Forms.TabControl tabControlTeamsGraphs;
-        private System.Windows.Forms.TabPage tabPageTeamBlueGraphs;
-        private System.Windows.Forms.TabPage tabPageTeamRedGraphs;
+        private System.Windows.Forms.TabPage tabPageTeams;
+        private System.Windows.Forms.TabPage tabPageIndividuals;
         private System.Windows.Forms.DataVisualization.Charting.Chart chart6;
         private System.Windows.Forms.DataVisualization.Charting.Chart chart2;
         private System.Windows.Forms.DataVisualization.Charting.Chart chart1;
         private System.Windows.Forms.DataVisualization.Charting.Chart chart5;
         private System.Windows.Forms.DataVisualization.Charting.Chart chart4;
-        private System.Windows.Forms.TabPage tabPage3;
-        private System.Windows.Forms.TabControl tabControlTeamsPlanes;
         private System.Windows.Forms.SplitContainer splitContainerMain;
-        private System.Windows.Forms.TabPage tabPageTeamBluePlanes;
-        private System.Windows.Forms.TabPage tabPageTeamRedPlanes;
-        private System.Windows.Forms.TabControl tabControlTeamBluePlanes;
-        private System.Windows.Forms.TabControl tabControlTeamRedPlanes;
         private System.Windows.Forms.Button buttonLoadXML;
         private System.Windows.Forms.Button buttonClearData;
         private System.Windows.Forms.Label labelLoadXML;
