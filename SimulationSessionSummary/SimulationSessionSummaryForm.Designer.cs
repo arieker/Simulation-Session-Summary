@@ -48,7 +48,7 @@ namespace SimulationSessionSummary_NS
             System.Windows.Forms.DataVisualization.Charting.Legend legend6 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             System.Windows.Forms.DataVisualization.Charting.Series series6 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.tabPageGraphs = new System.Windows.Forms.TabPage();
-            this.tabControlTeamsGraphs = new System.Windows.Forms.TabControl();
+            this.tabControlGraphs = new System.Windows.Forms.TabControl();
             this.tabPageTeams = new System.Windows.Forms.TabPage();
             this.chart2 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
@@ -75,8 +75,9 @@ namespace SimulationSessionSummary_NS
             this.labelBlueTeam = new System.Windows.Forms.Label();
             this.dataGridViewMainPage = new System.Windows.Forms.DataGridView();
             this.tabControlMain = new System.Windows.Forms.TabControl();
+            this.comboBoxIndividuals = new System.Windows.Forms.ComboBox();
             this.tabPageGraphs.SuspendLayout();
-            this.tabControlTeamsGraphs.SuspendLayout();
+            this.tabControlGraphs.SuspendLayout();
             this.tabPageTeams.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.chart2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
@@ -97,7 +98,7 @@ namespace SimulationSessionSummary_NS
             // 
             // tabPageGraphs
             // 
-            this.tabPageGraphs.Controls.Add(this.tabControlTeamsGraphs);
+            this.tabPageGraphs.Controls.Add(this.tabControlGraphs);
             this.tabPageGraphs.Location = new System.Drawing.Point(4, 22);
             this.tabPageGraphs.Name = "tabPageGraphs";
             this.tabPageGraphs.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
@@ -106,15 +107,15 @@ namespace SimulationSessionSummary_NS
             this.tabPageGraphs.Text = "Graphs";
             this.tabPageGraphs.UseVisualStyleBackColor = true;
             // 
-            // tabControlTeamsGraphs
+            // tabControlGraphs
             // 
-            this.tabControlTeamsGraphs.Controls.Add(this.tabPageTeams);
-            this.tabControlTeamsGraphs.Controls.Add(this.tabPageIndividuals);
-            this.tabControlTeamsGraphs.Location = new System.Drawing.Point(0, 0);
-            this.tabControlTeamsGraphs.Name = "tabControlTeamsGraphs";
-            this.tabControlTeamsGraphs.SelectedIndex = 0;
-            this.tabControlTeamsGraphs.Size = new System.Drawing.Size(961, 671);
-            this.tabControlTeamsGraphs.TabIndex = 1;
+            this.tabControlGraphs.Controls.Add(this.tabPageTeams);
+            this.tabControlGraphs.Controls.Add(this.tabPageIndividuals);
+            this.tabControlGraphs.Location = new System.Drawing.Point(0, 0);
+            this.tabControlGraphs.Name = "tabControlGraphs";
+            this.tabControlGraphs.SelectedIndex = 0;
+            this.tabControlGraphs.Size = new System.Drawing.Size(961, 671);
+            this.tabControlGraphs.TabIndex = 1;
             // 
             // tabPageTeams
             // 
@@ -179,6 +180,7 @@ namespace SimulationSessionSummary_NS
             // 
             // tabPageIndividuals
             // 
+            this.tabPageIndividuals.Controls.Add(this.comboBoxIndividuals);
             this.tabPageIndividuals.Controls.Add(this.chart5);
             this.tabPageIndividuals.Controls.Add(this.chart4);
             this.tabPageIndividuals.Controls.Add(this.chart6);
@@ -212,7 +214,7 @@ namespace SimulationSessionSummary_NS
             this.chart4.ChartAreas.Add(chartArea5);
             legend5.Name = "Legend1";
             this.chart4.Legends.Add(legend5);
-            this.chart4.Location = new System.Drawing.Point(6, 6);
+            this.chart4.Location = new System.Drawing.Point(341, 312);
             this.chart4.Name = "chart4";
             series5.ChartArea = "ChartArea1";
             series5.Legend = "Legend1";
@@ -434,6 +436,14 @@ namespace SimulationSessionSummary_NS
             this.tabControlMain.Size = new System.Drawing.Size(965, 693);
             this.tabControlMain.TabIndex = 19;
             // 
+            // comboBoxIndividuals
+            // 
+            this.comboBoxIndividuals.FormattingEnabled = true;
+            this.comboBoxIndividuals.Location = new System.Drawing.Point(7, 7);
+            this.comboBoxIndividuals.Name = "comboBoxIndividuals";
+            this.comboBoxIndividuals.Size = new System.Drawing.Size(121, 21);
+            this.comboBoxIndividuals.TabIndex = 4;
+            // 
             // SimulationSessionSummaryForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -443,7 +453,7 @@ namespace SimulationSessionSummary_NS
             this.Name = "SimulationSessionSummaryForm";
             this.Text = "Simulation Session Summary";
             this.tabPageGraphs.ResumeLayout(false);
-            this.tabControlTeamsGraphs.ResumeLayout(false);
+            this.tabControlGraphs.ResumeLayout(false);
             this.tabPageTeams.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.chart2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).EndInit();
@@ -484,7 +494,7 @@ namespace SimulationSessionSummary_NS
         private System.Windows.Forms.Label labelRedTeam;
         private System.Windows.Forms.Label labelBlueTeam;
         private System.Windows.Forms.TabControl tabControlMain;
-        private System.Windows.Forms.TabControl tabControlTeamsGraphs;
+        private System.Windows.Forms.TabControl tabControlGraphs;
         private System.Windows.Forms.TabPage tabPageTeams;
         private System.Windows.Forms.TabPage tabPageIndividuals;
         private System.Windows.Forms.DataVisualization.Charting.Chart chart6;
@@ -496,5 +506,6 @@ namespace SimulationSessionSummary_NS
         private System.Windows.Forms.Button buttonLoadXML;
         private System.Windows.Forms.Button buttonClearData;
         private System.Windows.Forms.Label labelLoadXML;
+        private System.Windows.Forms.ComboBox comboBoxIndividuals;
     }
 }

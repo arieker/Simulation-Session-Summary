@@ -201,6 +201,7 @@ namespace SimulationSessionSummary_NS
             // REFERENCE: Blue Team 1 | Red Team 2
 
             dataGridViewMainPage.Refresh();
+            comboBoxIndividuals.Refresh();
 
             labelBlueTeamAliveEntities.Text = GetTeamAlivePlatformsList(1).Count.ToString();
             labelBlueTeamRemainingWeapons.Text = GetTeamRemainingWeaponsList(1).Count.ToString();
@@ -409,6 +410,8 @@ namespace SimulationSessionSummary_NS
         private void InitUI()
         {
             dataGridViewMainPage.DataSource = platformObjects.ToArray();
+            //dataGridViewMainPage.DataSource = platformObjects.ToArray();
+            comboBoxIndividuals.DataSource = platformObjects.ToArray();
 
             foreach (PlatformObject platformObject in platformObjects)
             {
@@ -416,17 +419,17 @@ namespace SimulationSessionSummary_NS
                 IndividualPlaneControl customControl = new IndividualPlaneControl(platformObject);
                 customControl.Dock = DockStyle.Fill;
                 tabPage.Controls.Add(customControl);
-                if (platformObject.Team == 1) // Blue Team
-                {
-                    tabControlTeamBluePlanes.TabPages.Add(tabPage);
-                }
-                else if (platformObject.Team == 2) // Red Team
-                {
-                    tabControlTeamRedPlanes.TabPages.Add(tabPage);
-                }
+                //if (platformObject.Team == 1) // Blue Team
+                //{
+                //    tabControlTeamBluePlanes.TabPages.Add(tabPage);
+                //}
+                //else if (platformObject.Team == 2) // Red Team
+                //{
+                //    tabControlTeamRedPlanes.TabPages.Add(tabPage);
+                //}
                 // note(anthony): Anything not on blue or red team won't have a tab created for it right now
                 // The data in these tabs will automatically update, but it's not so simple
-
+                // note(Tim): No more red or blue team tabs.
             }
 
             updateMainStatistics();
@@ -883,14 +886,14 @@ namespace SimulationSessionSummary_NS
         private void buttonClearData_Click(object sender, EventArgs e)
         {
             platformObjects.Clear();
-            foreach (TabPage tabPage in tabControlTeamBluePlanes.TabPages)
+            foreach (TabPage tabPage in tabControlGraphs.TabPages)
             {
-                tabControlTeamBluePlanes.TabPages.Remove(tabPage);
+                tabControlGraphs.TabPages.Remove(tabPage);
             }
-            foreach (TabPage tabPage in tabControlTeamRedPlanes.TabPages)
-            {
-                tabControlTeamRedPlanes.TabPages.Remove(tabPage);
-            }
+            //foreach (TabPage tabPage in tabControlIndividuals.TabPages)
+            //{
+            //    tabControlTeamRedPlanes.TabPages.Remove(tabPage);
+            //}
             dataGridViewMainPage.DataSource = null;
 
             // note(anthony): Clean up anything else such as the graphs tab that we currently don't use
