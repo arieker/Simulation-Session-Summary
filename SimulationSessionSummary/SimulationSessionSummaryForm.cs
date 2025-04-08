@@ -276,255 +276,211 @@ namespace SimulationSessionSummary_NS
             UpdateCharts();
         }
 
-        //private void UpdateCharts()
-        //{
-        //    // Avoid crashing on form close
-        //    if (chart1 == null || chart1.IsDisposed || chart2 == null || chart2.IsDisposed)
-        //        return;
-
-        //    // === BAR CHART (chart1): Current Kills ===
-        //    int blueTeamKills = GetTeamKills(1);
-        //    int redTeamKills = GetTeamKills(2);
-
-        //    chart1.Series.Clear();
-
-        //    Series killsSeries = new Series("Team Kills")
-        //    {
-        //        ChartType = SeriesChartType.Column
-        //    };
-
-        //    killsSeries.Points.AddXY("Blue Team", blueTeamKills);
-        //    killsSeries.Points.AddXY("Red Team", redTeamKills);
-        //    killsSeries.Points[0].Color = Color.Blue;
-        //    killsSeries.Points[1].Color = Color.Red;
-
-        //    chart1.Series.Add(killsSeries);
-
-        //    if (chart1.ChartAreas.Count == 0)
-        //        chart1.ChartAreas.Add(new ChartArea("Default"));
-
-        //    // Add chart title only once
-        //    if (chart1.Titles.Count == 0)
-        //    {
-        //        chart1.Titles.Add("Team Kills");
-        //        chart1.Titles[0].Font = new Font("Segoe UI", 10, FontStyle.Bold);
-        //        chart1.Titles[0].ForeColor = Color.DarkSlateGray;
-        //    }
-
-        //    var area1 = chart1.ChartAreas[0];
-
-        //    area1.AxisX.Title = "Team";
-        //    area1.AxisY.Title = "Kills";
-        //    area1.AxisX.Interval = 1;
-
-        //    int maxKills = Math.Max(blueTeamKills, redTeamKills);
-        //    area1.AxisY.Minimum = 0;
-        //    area1.AxisY.Maximum = maxKills == 0 ? 1 : maxKills + 1;
-
-        //    chart1.Invalidate();
-
-        //    // === LINE CHART (chart2): Kills Over Time ===
-
-        //    if (simulationStartTime != default(DateTime))
-        //    {
-        //        killHistory.Add((DateTime.Now, blueTeamKills, redTeamKills));
-        //    }
-
-        //    if (chart2.ChartAreas.Count == 0)
-        //        chart2.ChartAreas.Add(new ChartArea("Main"));
-
-        //    var area2 = chart2.ChartAreas[0];
-        //    area2.AxisX.Title = "Time (s)";
-        //    area2.AxisY.Title = "Kills";
-
-        //    // Add chart title only once
-        //    if (chart2.Titles.Count == 0)
-        //    {
-        //        chart2.Titles.Add("Team Kills Over Time");
-        //        chart2.Titles[0].Font = new Font("Segoe UI", 10, FontStyle.Bold);
-        //        chart2.Titles[0].ForeColor = Color.DarkSlateGray;
-        //    }
-
-        //    // Ensure Blue Team series exists
-        //    Series blueSeries;
-        //    if (chart2.Series.IndexOf("Blue Team") >= 0)
-        //    {
-        //        blueSeries = chart2.Series["Blue Team"];
-        //        blueSeries.Points.Clear();
-        //    }
-        //    else
-        //    {
-        //        blueSeries = new Series("Blue Team")
-        //        {
-        //            ChartType = SeriesChartType.Line,
-        //            Color = Color.Blue
-        //        };
-        //        chart2.Series.Add(blueSeries);
-        //    }
-
-        //    // Ensure Red Team series exists
-        //    Series redSeries;
-        //    if (chart2.Series.IndexOf("Red Team") >= 0)
-        //    {
-        //        redSeries = chart2.Series["Red Team"];
-        //        redSeries.Points.Clear();
-        //    }
-        //    else
-        //    {
-        //        redSeries = new Series("Red Team")
-        //        {
-        //            ChartType = SeriesChartType.Line,
-        //            Color = Color.Red
-        //        };
-        //        chart2.Series.Add(redSeries);
-        //    }
-
-        //    foreach (var point in killHistory)
-        //    {
-        //        double timeSeconds = (point.Timestamp - simulationStartTime).TotalSeconds;
-        //        blueSeries.Points.AddXY(timeSeconds, point.BlueKills);
-        //        redSeries.Points.AddXY(timeSeconds, point.RedKills);
-        //    }
-
-        //    chart2.Invalidate();
-        //}
-
-
         private void UpdateCharts()
         {
-            // Guard against null references
-            if (chart1 == null || chart2 == null || chart4 == null
-                || tabControlTeamsGraphs == null)
+            // Sanity-check
+            if (tabControlTeamsGraphs == null || tabPageTeams == null || tabPageIndividuals == null)
+                return;
+            // Also ensure the chart controls are not null or disposed
+            if (chart1 == null || chart2 == null || chart3Blue == null || chart3Red == null ||
+                chart4 == null || chart5 == null)
             {
                 return;
             }
 
-            // ==========================
-            // 1) TEAMS TAB SELECTED
-            // ==========================
+            // ===============================================================
+            // If the current tab is the TEAMS tab...
+            // ===============================================================
             if (tabControlTeamsGraphs.SelectedTab == tabPageTeams)
             {
-                // ============ CHART1: TEAM KILLS (Bar) =============
+                // -----------------------------------------------------------
+                // 1) chart1: TEAM KILLS (Bar Chart)
+                // -----------------------------------------------------------
                 chart1.Series.Clear();
-                // Ensure chart area
                 if (chart1.ChartAreas.Count == 0)
-                    chart1.ChartAreas.Add(new ChartArea("TeamsArea1"));
+                    chart1.ChartAreas.Add(new ChartArea("TeamKillsArea"));
 
-                // OPTIONAL: Add/Update title
                 chart1.Titles.Clear();
-                chart1.Titles.Add("Team Kills Bar Chart");
+                chart1.Titles.Add("Team Kills (Bar Chart)");
 
                 int blueTeamKills = GetTeamKills(1);
                 int redTeamKills = GetTeamKills(2);
 
-                var killsSeries = new Series("Team Kills")
+                Series killsSeries = new Series("Team Kills")
                 {
                     ChartType = SeriesChartType.Column
                 };
                 killsSeries.Points.AddXY("Blue Team", blueTeamKills);
                 killsSeries.Points.AddXY("Red Team", redTeamKills);
+                // Optional: color differently
                 killsSeries.Points[0].Color = Color.Blue;
                 killsSeries.Points[1].Color = Color.Red;
 
                 chart1.Series.Add(killsSeries);
-                chart1.ChartAreas[0].AxisX.Title = "Team";
-                chart1.ChartAreas[0].AxisY.Title = "Kills";
-                chart1.ChartAreas[0].AxisY.Minimum = 0;
-                chart1.ChartAreas[0].AxisY.Maximum
-                    = Math.Max(1, Math.Max(blueTeamKills, redTeamKills) + 1);
+
+                var areaTeamBar = chart1.ChartAreas[0];
+                areaTeamBar.AxisX.Title = "Team";
+                areaTeamBar.AxisY.Title = "Kills";
+                areaTeamBar.AxisX.Interval = 1;
+
+                int maxKills = Math.Max(blueTeamKills, redTeamKills);
+                areaTeamBar.AxisY.Minimum = 0;
+                areaTeamBar.AxisY.Maximum = (maxKills == 0) ? 1 : maxKills + 1;
 
                 chart1.Invalidate();
 
-                // ============ CHART2: TEAM KILLS OVER TIME (StepLine) ============
+                // -----------------------------------------------------------
+                // 2) chart2: TEAM KILLS OVER TIME (StepLine)
+                // -----------------------------------------------------------
                 chart2.Series.Clear();
                 if (chart2.ChartAreas.Count == 0)
-                    chart2.ChartAreas.Add(new ChartArea("TeamsArea2"));
+                    chart2.ChartAreas.Add(new ChartArea("TeamKillsOverTimeArea"));
 
                 chart2.Titles.Clear();
-                chart2.Titles.Add("Team Kills Over Time");
+                chart2.Titles.Add("Team Kills Over Time (StepLine)");
 
-                // Add a snapshot to the team-level killHistory
+                // Record the newest kill snapshot
                 if (simulationStartTime != default(DateTime))
                 {
+                    // Add or update the killHistory
                     killHistory.Add((DateTime.Now, blueTeamKills, redTeamKills));
                 }
 
-                var blueStepSeries = new Series("Blue Team")
+                Series blueSeries = new Series("Blue Team")
                 {
                     ChartType = SeriesChartType.StepLine,
                     Color = Color.Blue,
                     BorderWidth = 3
                 };
-                var redStepSeries = new Series("Red Team")
+                Series redSeries = new Series("Red Team")
                 {
                     ChartType = SeriesChartType.StepLine,
                     Color = Color.Red,
                     BorderWidth = 3
                 };
 
-                // Fill from killHistory
+                // Populate from killHistory
                 foreach (var record in killHistory)
                 {
                     double timeSec = (record.Timestamp - simulationStartTime).TotalSeconds;
-                    blueStepSeries.Points.AddXY(timeSec, record.BlueKills);
-                    redStepSeries.Points.AddXY(timeSec, record.RedKills);
+                    blueSeries.Points.AddXY(timeSec, record.BlueKills);
+                    redSeries.Points.AddXY(timeSec, record.RedKills);
                 }
 
-                chart2.Series.Add(blueStepSeries);
-                chart2.Series.Add(redStepSeries);
+                chart2.Series.Add(blueSeries);
+                chart2.Series.Add(redSeries);
 
-                // We always start at 0, let it go to lastTeamTime + buffer
-                ChartArea areaTeams = chart2.ChartAreas[0];
-                double lastTeamTime = killHistory.Any()
+                var areaTeamLine = chart2.ChartAreas[0];
+                areaTeamLine.AxisX.Minimum = 0;
+
+                double lastTimeSec = killHistory.Any()
                     ? (killHistory.Last().Timestamp - simulationStartTime).TotalSeconds
                     : 0.0;
-                double timeBuffer = 5.0;   // some space on the right
-                areaTeams.AxisX.Minimum = 0;
-                double maxTeamX = lastTeamTime + timeBuffer;
-                areaTeams.AxisX.Maximum = Math.Max(maxTeamX, 0.1); // avoid zero-interval
+                double buffer = 5.0;
+                areaTeamLine.AxisX.Maximum = Math.Max(lastTimeSec + buffer, 0.1);
 
-                // We want exactly 5 major ticks: 0%, 25%, 50%, 75%, 100%
-                double stepTeam = (areaTeams.AxisX.Maximum) / 4.0;
-                areaTeams.AxisX.Interval = stepTeam;
-                areaTeams.AxisX.MajorGrid.Interval = stepTeam;
-                areaTeams.AxisX.MajorTickMark.Interval = stepTeam;
+                double step = areaTeamLine.AxisX.Maximum / 4.0;
+                areaTeamLine.AxisX.Interval = step;
+                areaTeamLine.AxisX.MajorGrid.Interval = step;
+                areaTeamLine.AxisX.MajorTickMark.Interval = step;
+                areaTeamLine.AxisX.LabelStyle.Format = "0";
 
-                areaTeams.AxisX.LabelStyle.Format = "0"; // integer labeling
-                areaTeams.AxisX.Title = "Time (s)";
-                areaTeams.AxisY.Title = "Kills";
+                areaTeamLine.AxisX.Title = "Time (s)";
+                areaTeamLine.AxisY.Title = "Kills";
 
                 chart2.Invalidate();
-            }
 
-            // ==========================
-            // 2) INDIVIDUALS TAB SELECTED
-            // ==========================
+                // -----------------------------------------------------------
+                // 3) chart3Blue: BLUE TEAM ACCURACY (Pie Chart)
+                // -----------------------------------------------------------
+                chart3Blue.Series.Clear();
+                chart3Blue.Titles.Clear();
+                chart3Blue.ChartAreas.Clear();
+
+                chart3Blue.ChartAreas.Add(new ChartArea("BlueAccuracyArea"));
+                chart3Blue.Titles.Add("Blue Team Accuracy");
+
+                var (blueShots, blueHits) = ComputeShotsForTeam(1);
+                Series sBlue = chart3Blue.Series.Add("BlueAccuracy");
+                sBlue.ChartType = SeriesChartType.Pie;
+
+                // Show percentage labels
+                sBlue.IsValueShownAsLabel = true;
+                sBlue.Label = "#PERCENT{P0}";
+
+                // Add points using indices
+                int idxBlueHits = sBlue.Points.AddXY("Hits", blueHits);
+                sBlue.Points[idxBlueHits].Color = Color.Blue;
+
+                int idxBlueMisses = sBlue.Points.AddXY("Misses", (blueShots - blueHits));
+                sBlue.Points[idxBlueMisses].Color = Color.DarkGray;
+
+                chart3Blue.Invalidate();
+
+                // -----------------------------------------------------------
+                // 4) chart3Red: RED TEAM ACCURACY (Pie Chart)
+                // -----------------------------------------------------------
+                chart3Red.Series.Clear();
+                chart3Red.Titles.Clear();
+                chart3Red.ChartAreas.Clear();
+
+                chart3Red.ChartAreas.Add(new ChartArea("RedAccuracyArea"));
+                chart3Red.Titles.Add("Red Team Accuracy");
+
+                var (redShots, redHits) = ComputeShotsForTeam(2);
+                Series sRed = chart3Red.Series.Add("RedAccuracy");
+                sRed.ChartType = SeriesChartType.Pie;
+
+                // Show percentage labels
+                sRed.IsValueShownAsLabel = true;
+                sRed.Label = "#PERCENT{P0}";
+
+                // Add points using indices
+                int idxRedHits = sRed.Points.AddXY("Hits", redHits);
+                sRed.Points[idxRedHits].Color = Color.Red;
+
+                int idxRedMisses = sRed.Points.AddXY("Misses", (redShots - redHits));
+                sRed.Points[idxRedMisses].Color = Color.DarkGray;
+
+                chart3Red.Invalidate();
+            }
+            // ===============================================================
+            // If the current tab is the INDIVIDUALS tab...
+            // ===============================================================
             else if (tabControlTeamsGraphs.SelectedTab == tabPageIndividuals)
             {
-                // If no plane is selected
-                if (comboBoxPlaneSelection == null
-                    || comboBoxPlaneSelection.SelectedItem == null)
+                // -----------------------------------------------------------
+                // 1) chart4: INDIVIDUAL KILLS OVER TIME (StepLine)
+                // -----------------------------------------------------------
+                chart4.Series.Clear();
+                if (chart4.ChartAreas.Count == 0)
+                    chart4.ChartAreas.Add(new ChartArea("IndividualKillsArea"));
+
+                chart4.Titles.Clear();
+                chart4.Titles.Add("Individual Kills Over Time");
+
+                // Check if a plane is selected
+                if (comboBoxPlaneSelection == null || comboBoxPlaneSelection.SelectedItem == null)
                 {
-                    chart4.Series.Clear();
+                    // If no selection, just clear chart5 as well
+                    chart4.Invalidate();
+
+                    chart5.Series.Clear();
+                    chart5.Titles.Clear();
+                    chart5.ChartAreas.Clear();
                     return;
                 }
 
-                chart4.Series.Clear();
-                if (chart4.ChartAreas.Count == 0)
-                    chart4.ChartAreas.Add(new ChartArea("IndividualArea"));
-
-                chart4.Titles.Clear();
-                chart4.Titles.Add("Individual Plane Kills Over Time");
-
+                // We have a valid plane selection
                 var selectedPlane = (PlatformObject)comboBoxPlaneSelection.SelectedItem;
 
-                // Build the StepLine series from the plane's kill records
-                var planeStepSeries = new Series($"{selectedPlane.Name} Kills Over Time")
+                Series planeStepSeries = new Series($"{selectedPlane.Name} Kills")
                 {
                     ChartType = SeriesChartType.StepLine,
                     Color = Color.Blue
                 };
 
+                // Fill from plane's kill record
                 foreach (var record in selectedPlane.PerPlaneKillRecords)
                 {
                     double timeSec = (record.Timestamp - simulationStartTime).TotalSeconds;
@@ -533,41 +489,79 @@ namespace SimulationSessionSummary_NS
 
                 chart4.Series.Add(planeStepSeries);
 
-                // =========================
-                //   X-AXIS LOGIC
-                // =========================
-                ChartArea areaPlane = chart4.ChartAreas[0];
-                // 1) Always start at 0
-                areaPlane.AxisX.Minimum = 0;
+                var areaIndividual = chart4.ChartAreas[0];
+                areaIndividual.AxisX.Minimum = 0;
 
-                // 2) Compute how far simulation has run so far
                 double currentTimeSec = (DateTime.Now - simulationStartTime).TotalSeconds;
-
-                // 3) If the plane has kills, find the last kill time in the records
-                double lastPlaneKillSec = selectedPlane.PerPlaneKillRecords.Any()
+                double lastKillSec = selectedPlane.PerPlaneKillRecords.Any()
                     ? (selectedPlane.PerPlaneKillRecords.Last().Timestamp - simulationStartTime).TotalSeconds
                     : 0.0;
 
-                // 4) The max X is either "current time" or "time of last kill," whichever is larger
-                double timeBuffer = 5.0;
-                double maxPlaneX = Math.Max(currentTimeSec, lastPlaneKillSec) + timeBuffer;
-                // Ensure it's never 0 or negative
-                areaPlane.AxisX.Maximum = Math.Max(maxPlaneX, 0.1);
+                double buffer = 5.0;
+                double maxX = Math.Max(currentTimeSec, lastKillSec) + buffer;
+                areaIndividual.AxisX.Maximum = Math.Max(maxX, 0.1);
 
-                // 5) Force exactly 5 major ticks: 0%, 25%, 50%, 75%, 100%
-                double stepPlane = areaPlane.AxisX.Maximum / 4.0;
-                areaPlane.AxisX.Interval = stepPlane;
-                areaPlane.AxisX.MajorGrid.Interval = stepPlane;
-                areaPlane.AxisX.MajorTickMark.Interval = stepPlane;
+                double stepPlane = areaIndividual.AxisX.Maximum / 4.0;
+                areaIndividual.AxisX.Interval = stepPlane;
+                areaIndividual.AxisX.MajorGrid.Interval = stepPlane;
+                areaIndividual.AxisX.MajorTickMark.Interval = stepPlane;
+                areaIndividual.AxisX.LabelStyle.Format = "0";
 
-                areaPlane.AxisX.LabelStyle.Format = "0"; // integer labeling
-                areaPlane.AxisX.Title = "Time (s)";
-                areaPlane.AxisY.Title = "Kills";
+                areaIndividual.AxisX.Title = "Time (s)";
+                areaIndividual.AxisY.Title = "Kills";
 
                 chart4.Invalidate();
+
+                // -----------------------------------------------------------
+                // 2) chart5: INDIVIDUAL ACCURACY (Pie Chart)
+                // -----------------------------------------------------------
+                chart5.Series.Clear();
+                chart5.Titles.Clear();
+                chart5.ChartAreas.Clear();
+
+                chart5.ChartAreas.Add(new ChartArea("IndividualAccuracyArea"));
+                chart5.Titles.Add($"Accuracy for {selectedPlane.Name}");
+
+                // Shots & hits for the selected plane
+                var (shots, hits) = ComputeShotsForPlatform(selectedPlane);
+
+                Series indivAccuracySeries = new Series("IndividualAccuracy")
+                {
+                    ChartType = SeriesChartType.Pie
+                };
+
+                // Show percentage labels
+                indivAccuracySeries.IsValueShownAsLabel = true;
+                indivAccuracySeries.Label = "#PERCENT{P0}";
+
+                // Add points using indices
+                int idxIndHits = indivAccuracySeries.Points.AddXY("Hits", hits);
+                indivAccuracySeries.Points[idxIndHits].Color = Color.Purple;
+
+                int idxIndMisses = indivAccuracySeries.Points.AddXY("Misses", (shots - hits));
+                indivAccuracySeries.Points[idxIndMisses].Color = Color.DarkGray;
+
+                chart5.Series.Add(indivAccuracySeries);
+                chart5.Invalidate();
+            }
+            // ===============================================================
+            // If neither Teams nor Individuals tab (some other tab)...
+            // ===============================================================
+            else
+            {
+                // Optionally clear all charts if you're on an unrelated tab
+                chart1.Series.Clear();
+                chart2.Series.Clear();
+                chart3Blue.Series.Clear();
+                chart3Red.Series.Clear();
+                chart4.Series.Clear();
+                chart5.Series.Clear();
             }
         }
-        
+
+
+
+
         //used for kills over time graphs
         private void SetupKillHistoryTimer()
         {
@@ -586,6 +580,52 @@ namespace SimulationSessionSummary_NS
             killHistoryTimer.Start();
         }
 
+        /// <summary>
+        /// Compute the total shots fired vs. total hits for a single platform.
+        /// Includes both bullets (GunObjects) and missiles/rockets (WeaponObjects).
+        /// </summary>
+        private (int totalShots, int totalHits) ComputeShotsForPlatform(PlatformObject p)
+        {
+            // Sum bullet hits & misses
+            int bulletHits = 0;
+            int bulletMisses = 0;
+            foreach (var gun in p.GunObjects)
+            {
+                bulletHits += gun.Hits;
+                bulletMisses += gun.Misses;
+            }
+            int totalBulletShots = bulletHits + bulletMisses;
+
+            // Sum missiles/bombs/rockets fired
+            // Each WeaponObject = exactly one munition. If Fired == true, that's one shot.
+            int missileShots = p.WeaponObjects.Count(w => w.Fired);
+            int missileHits = p.WeaponObjects.Count(w => w.Hit);
+
+            int totalShots = totalBulletShots + missileShots;
+            int totalHits = bulletHits + missileHits;
+
+            return (totalShots, totalHits);
+        }
+
+        /// <summary>
+        /// Compute total shots fired & total hits for an entire team (all platforms).
+        /// </summary>
+        private (int totalShots, int totalHits) ComputeShotsForTeam(int team)
+        {
+            int sumShots = 0;
+            int sumHits = 0;
+
+            foreach (var platform in platformObjects.Where(p => p.Team == team))
+            {
+                var (platformShots, platformHits) = ComputeShotsForPlatform(platform);
+                sumShots += platformShots;
+                sumHits += platformHits;
+            }
+
+            return (sumShots, sumHits);
+        }
+
+
         private void InitUI()
         {
             dataGridViewMainPage.DataSource = platformObjects.ToArray();
@@ -596,22 +636,10 @@ namespace SimulationSessionSummary_NS
                 IndividualPlaneControl customControl = new IndividualPlaneControl(platformObject);
                 customControl.Dock = DockStyle.Fill;
                 tabPage.Controls.Add(customControl);
-                //(from Andy) causing error so i commneted it out
-                //if (platformObject.Team == 1) // Blue Team
-                //{
-                //    //tabControlTeamBluePlanes.TabPages.Add(tabPage);
-                //}
-                //else if (platformObject.Team == 2) // Red Team
-                //{
-                //    //tabControlTeamRedPlanes.TabPages.Add(tabPage);
-                //}
-                //// note(anthony): Anything not on blue or red team won't have a tab created for it right now
-                //// The data in these tabs will automatically update, but it's not so simple
-
             }
             comboBoxPlaneSelection = new ComboBox();
             comboBoxPlaneSelection.DropDownStyle = ComboBoxStyle.DropDownList;
-            comboBoxPlaneSelection.Location = new Point(10, 480); // pick a location on tabPageIndividuals
+            comboBoxPlaneSelection.Location = new Point(10, 10); // pick a location on tabPageIndividuals
             comboBoxPlaneSelection.Width = 200;
 
             // Fill with all platforms (assuming 'platformObjects' is a valid list)
@@ -1124,14 +1152,6 @@ namespace SimulationSessionSummary_NS
         private void buttonClearData_Click(object sender, EventArgs e)
         {
             platformObjects.Clear();
-            //foreach (TabPage tabPage in tabControlTeamBluePlanes.TabPages)
-            //{
-            //    tabControlTeamBluePlanes.TabPages.Remove(tabPage);
-            //}
-            //foreach (TabPage tabPage in tabControlTeamRedPlanes.TabPages)
-            //{
-            //    tabControlTeamRedPlanes.TabPages.Remove(tabPage);
-            //}
             dataGridViewMainPage.DataSource = null;
 
             // note(anthony): Clean up anything else such as the graphs tab that we currently don't use
