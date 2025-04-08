@@ -917,12 +917,12 @@ namespace SimulationSessionSummary_NS
                 PlatformObject OurTargetEntity = FindPlatformFromName(te.Name);
 
                 if (isWeaponABullet(me.ID))
-                {
+                { // Bullet
                     GunObject OurGunObject = findGunFromBulletID(me.ID);
                     OurGunObject.ActiveBulletEntityIDs.Remove(me.ID);
                     OurGunObject.RegisterBulletHit(OurTargetEntity);
 
-                    if (te.Health <= 0)
+                    if (te.Health <= 0 && !OurTargetEntity.Alive)
                     {
                         OurTargetEntity.Alive = false;
                         OurGunObject.KilledPlatforms.Add(OurTargetEntity);
@@ -941,10 +941,10 @@ namespace SimulationSessionSummary_NS
                     }
                 }
                 else
-                {
+                { // Missile/Non-bullet
                     WeaponObject OurWeaponObject = FindWeaponFromWeaponID(me.ID);
                     OurWeaponObject.Hit = true;
-                    if (te.Health <= 0)
+                    if (te.Health <= 0 && !OurTargetEntity.Alive)
                     {
                         OurTargetEntity.Alive = false;
                         OurWeaponObject.ResultedInKill = true;
