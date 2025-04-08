@@ -21,6 +21,7 @@ using System.Windows.Forms;
 using System.Xml.Serialization;
 using System.Collections.ObjectModel;
 using System.Windows.Forms.DataVisualization.Charting;
+using System.Security.Cryptography.X509Certificates;
 
 namespace SimulationSessionSummary_NS
 {
@@ -201,7 +202,9 @@ namespace SimulationSessionSummary_NS
             // REFERENCE: Blue Team 1 | Red Team 2
 
             dataGridViewMainPage.Refresh();
+            // for the individuals page
             comboBoxIndividuals.Refresh();
+            Debug.WriteLine("poop");
 
             labelBlueTeamAliveEntities.Text = GetTeamAlivePlatformsList(1).Count.ToString();
             labelBlueTeamRemainingWeapons.Text = GetTeamRemainingWeaponsList(1).Count.ToString();
@@ -378,7 +381,9 @@ namespace SimulationSessionSummary_NS
 
             foreach (var point in killHistory)
             {
-                double timeSeconds = (point.Timestamp - simulationStartTime).TotalSeconds;
+                //double
+                double timeSecondsDouble = (point.Timestamp - simulationStartTime).TotalSeconds;
+                int timeSeconds = (int)timeSecondsDouble;
                 blueSeries.Points.AddXY(timeSeconds, point.BlueKills);
                 redSeries.Points.AddXY(timeSeconds, point.RedKills);
             }
@@ -405,35 +410,52 @@ namespace SimulationSessionSummary_NS
             killHistoryTimer.Start();
         }
 
-
+        private class pieData
+        {
+            public String name { get; set; }
+            public int value { get; set; }
+        }
 
         private void InitUI()
         {
             dataGridViewMainPage.DataSource = platformObjects.ToArray();
             //dataGridViewMainPage.DataSource = platformObjects.ToArray();
-            comboBoxIndividuals.DataSource = platformObjects.ToArray();
+            //comboBoxIndividuals.DataSource = platformObjects.ToArray();
 
             foreach (PlatformObject platformObject in platformObjects)
             {
-                TabPage tabPage = new TabPage(platformObject.Name);
-                IndividualPlaneControl customControl = new IndividualPlaneControl(platformObject);
-                customControl.Dock = DockStyle.Fill;
-                tabPage.Controls.Add(customControl);
-                //if (platformObject.Team == 1) // Blue Team
-                //{
-                //    tabControlTeamBluePlanes.TabPages.Add(tabPage);
-                //}
-                //else if (platformObject.Team == 2) // Red Team
-                //{
-                //    tabControlTeamRedPlanes.TabPages.Add(tabPage);
-                //}
-                // note(anthony): Anything not on blue or red team won't have a tab created for it right now
-                // The data in these tabs will automatically update, but it's not so simple
-                // note(Tim): No more red or blue team tabs.
+                comboBoxIndividuals.Items.Add(platformObject.Name);
+                comboBoxIndividuals.SelectedIndex = 0;
+
+                List<pieData> weapons = new List<pieData>();
+                
+                foreach (WeaponObject weapon in platformObject.WeaponObjects)
+                {
+                    if (!weapons.Any(w => w.name == weapon.Name))
+                    {
+                        // get a list of the weapons
+                        weapons.Add(new pieData { name = weapon.Name, value = 1 });
+                    }
+                    else
+                    {
+                        // increment the value in the pie chart by one
+                        weapons.First(w => w.name == weapon.Name).value += 1;
+                    }
+                }
+
+                foreach (pieData datum in weapons)
+                {
+
+                    //chartPieIndividuals1.Series.Add(datum.name, datum.value);
+                    chartPieIndividuals1.Series.Add(datum.name);
+                }
+
             }
 
             updateMainStatistics();
         }
+
+        
 
         #endregion
 
@@ -888,7 +910,20 @@ namespace SimulationSessionSummary_NS
             platformObjects.Clear();
             foreach (TabPage tabPage in tabControlGraphs.TabPages)
             {
-                tabControlGraphs.TabPages.Remove(tabPage);
+                foreach (Control control in tabPage.Controls)
+                {
+                    if (control is Chart chart)
+                    {
+                        chart.DataSource = null;
+                        chart.Series.Clear();
+                    }
+                    else if (control is ComboBox comboBox)
+                    {
+                        comboBox.DataSource = null;
+                        comboBox.Items.Clear();
+                    }
+                }
+                //tabControlGraphs.TabPages.Remove(tabPage);
             }
             //foreach (TabPage tabPage in tabControlIndividuals.TabPages)
             //{
@@ -976,6 +1011,30 @@ namespace SimulationSessionSummary_NS
             }
         }
 
-        
+        private void comboBoxIndividuals_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            List<Control> controls = new List<Control> { chartPieIndividuals1, chartIndividuals2, chartIndividuals3 };
+
+            foreach (Control control in controls)
+            {
+                if (control is Chart chart)
+                {
+                    chart.Series.Clear();
+
+                }
+                else if (control is DataGridView dgv)
+                {
+                    dgv.Rows.Clear();
+
+                }
+                
+
+            }
+
+        }
+
+
+
+
     }
 }
