@@ -21,6 +21,8 @@ using System.Windows.Forms;
 using System.Xml.Serialization;
 using System.Collections.ObjectModel;
 using System.Windows.Forms.DataVisualization.Charting;
+using BSI.MACE.AI.Commands.EOB;
+using FastColoredTextBoxNS;
 
 namespace SimulationSessionSummary_NS
 {
@@ -46,6 +48,7 @@ namespace SimulationSessionSummary_NS
         private Timer killHistoryTimer;
 
         private ComboBox comboBoxPlaneSelection;
+        private ComboBox comboBoxPlaneTypeSelection;
 
 
         // These two lists are READ ONLY!!! And update automatically
@@ -118,6 +121,17 @@ namespace SimulationSessionSummary_NS
 
             // add this form instance to the window config controller as a managed form
             _plugin.WindowConfigController.AddManagedForm(this);
+        }
+
+        public class PlatformTypeGroup
+        {
+            public string Type { get; set; }
+            public List<PlatformObject> Platforms { get; set; }
+
+            public override string ToString()
+            {
+                return Type;
+            }
         }
 
         #endregion
@@ -279,11 +293,11 @@ namespace SimulationSessionSummary_NS
         private void UpdateCharts()
         {
             // Sanity-check
-            if (tabControlTeamsGraphs == null || tabPageTeams == null || tabPageIndividuals == null)
+            if (tabControlTeamsGraphs == null || tabPageTeams == null || tabPageIndividuals == null || tabPageTypes == null)
                 return;
             // Also ensure the chart controls are not null or disposed
             if (chart1 == null || chart2 == null || chart3Blue == null || chart3Red == null ||
-                chart4 == null || chart5 == null)
+                chart4 == null || chart5 == null || chartTypesKillsTime == null || chartTypesAccuracy == null)
             {
                 return;
             }
@@ -545,6 +559,124 @@ namespace SimulationSessionSummary_NS
                 chart5.Invalidate();
             }
             // ===============================================================
+            // If the current tab is the TYPES tab...
+            // ===============================================================
+            else if (tabControlTeamsGraphs.SelectedTab == tabPageTypes)
+            {
+                // -----------------------------------------------------------
+                // 1) chartTypesKillsTime: TYPES KILLS OVER TIME (StepLine)
+                // -----------------------------------------------------------
+                chartTypesKillsTime.Series.Clear();
+                if (chartTypesKillsTime.ChartAreas.Count == 0)
+                    chartTypesKillsTime.ChartAreas.Add(new ChartArea("TypesKillsArea"));
+
+                chartTypesKillsTime.Titles.Clear();
+                chartTypesKillsTime.Titles.Add("Types Kills Over Time");
+
+                if (comboBoxPlaneTypeSelection == null || comboBoxPlaneTypeSelection.SelectedItem == null)
+                {
+                    chartTypesKillsTime.Invalidate();
+                    chartTypesAccuracy.Series.Clear();
+                    chartTypesAccuracy.Titles.Clear();
+                    chartTypesAccuracy.ChartAreas.Clear();
+                    return;
+                }
+
+                var selectedType = (PlatformTypeGroup)comboBoxPlaneTypeSelection.SelectedItem;
+
+                Series planeStepSeries = new Series($"{selectedType.Type} Kills")
+                {
+                    ChartType = SeriesChartType.StepLine,
+                    Color = Color.Blue
+                };
+
+                double latestKillSec = double.MinValue;
+
+                // Aggregate kills over time across all platforms of this type
+                SortedDictionary<double, int> killsOverTime = new SortedDictionary<double, int>();
+
+                foreach (PlatformObject platform in selectedType.Platforms)
+                {
+                    foreach (var record in platform.PerPlaneKillRecords)
+                    {
+                        double timeSec = (record.Timestamp - simulationStartTime).TotalSeconds;
+                        if (!killsOverTime.ContainsKey(timeSec))
+                            killsOverTime[timeSec] = 0;
+
+                        killsOverTime[timeSec] += record.PlaneKillCount;
+
+                        if (timeSec > latestKillSec)
+                            latestKillSec = timeSec;
+                    }
+                }
+
+                // Plot cumulative kills over time
+                int cumulativeKills = 0;
+                foreach (var kvp in killsOverTime.OrderBy(k => k.Key))
+                {
+                    cumulativeKills += kvp.Value;
+                    planeStepSeries.Points.AddXY(kvp.Key, cumulativeKills);
+                }
+
+                chartTypesKillsTime.Series.Add(planeStepSeries);
+
+                var areaType = chartTypesKillsTime.ChartAreas[0];
+                areaType.AxisX.Minimum = 0;
+
+                double currentTimeSec = (DateTime.Now - simulationStartTime).TotalSeconds;
+                double buffer = 5.0;
+                double maxX = Math.Max(currentTimeSec, latestKillSec) + buffer;
+                areaType.AxisX.Maximum = Math.Max(maxX, 0.1);
+
+                double stepPlane = areaType.AxisX.Maximum / 4.0;
+                areaType.AxisX.Interval = stepPlane;
+                areaType.AxisX.MajorGrid.Interval = stepPlane;
+                areaType.AxisX.MajorTickMark.Interval = stepPlane;
+                areaType.AxisX.LabelStyle.Format = "0";
+
+                areaType.AxisX.Title = "Time (s)";
+                areaType.AxisY.Title = "Kills";
+
+                chartTypesKillsTime.Invalidate();
+
+                // -----------------------------------------------------------
+                // 2) chartTypesAccuracy: TYPES ACCURACY (Pie Chart)
+                // -----------------------------------------------------------
+                chartTypesAccuracy.Series.Clear();
+                chartTypesAccuracy.Titles.Clear();
+                chartTypesAccuracy.ChartAreas.Clear();
+
+                chartTypesAccuracy.ChartAreas.Add(new ChartArea("IndividualAccuracyArea"));
+                chartTypesAccuracy.Titles.Add($"Accuracy for {selectedType.Type}");
+
+                int shotsTotal = 0;
+                int hitsTotal = 0;
+
+                foreach (PlatformObject platform in selectedType.Platforms)
+                {
+                    var (shots, hits) = ComputeShotsForPlatform(platform);
+                    shotsTotal += shots;
+                    hitsTotal += hits;
+                }
+
+                Series typeAccuracySeries = new Series("TypeAccuracy")
+                {
+                    ChartType = SeriesChartType.Pie,
+                    IsValueShownAsLabel = true,
+                    Label = "#PERCENT{P0}"
+                };
+
+                int idxTypeHits = typeAccuracySeries.Points.AddXY("Hits", hitsTotal);
+                typeAccuracySeries.Points[idxTypeHits].Color = Color.Purple;
+
+                int idxTypeMisses = typeAccuracySeries.Points.AddXY("Misses", shotsTotal - hitsTotal);
+                typeAccuracySeries.Points[idxTypeMisses].Color = Color.DarkGray;
+
+                chartTypesAccuracy.Series.Add(typeAccuracySeries);
+                chartTypesAccuracy.Invalidate();
+            }
+
+            // ===============================================================
             // If neither Teams nor Individuals tab (some other tab)...
             // ===============================================================
             else
@@ -556,6 +688,9 @@ namespace SimulationSessionSummary_NS
                 chart3Red.Series.Clear();
                 chart4.Series.Clear();
                 chart5.Series.Clear();
+                chartTypesKillsTime.Series.Clear();
+                chartTypesAccuracy.Series.Clear();
+                comboBoxPlaneTypeSelection.DataSource = null;
             }
         }
 
@@ -625,6 +760,20 @@ namespace SimulationSessionSummary_NS
             return (sumShots, sumHits);
         }
 
+        
+
+
+        private void UpdateChartsByType()
+        {
+            string selectedType = comboBoxPlaneTypeSelection.SelectedItem as string;
+            if (string.IsNullOrEmpty(selectedType))
+                return;
+
+            var platformsOfType = platformObjects.Where(p => p.Type == selectedType).ToList();
+
+            // You can now aggregate data across `platformsOfType` and update charts.
+            // For example, sum all weapons or average some values.
+        }
 
         private void InitUI()
         {
@@ -637,20 +786,48 @@ namespace SimulationSessionSummary_NS
                 customControl.Dock = DockStyle.Fill;
                 tabPage.Controls.Add(customControl);
             }
-            comboBoxPlaneSelection = new ComboBox();
-            comboBoxPlaneSelection.DropDownStyle = ComboBoxStyle.DropDownList;
-            comboBoxPlaneSelection.Location = new Point(10, 10); // pick a location on tabPageIndividuals
-            comboBoxPlaneSelection.Width = 200;
 
-            // Fill with all platforms (assuming 'platformObjects' is a valid list)
-            comboBoxPlaneSelection.DataSource = platformObjects;
-            comboBoxPlaneSelection.DisplayMember = "Name";
+            // For the individuals tab
+            {
+                comboBoxPlaneSelection = new ComboBox();
+                comboBoxPlaneSelection.DropDownStyle = ComboBoxStyle.DropDownList;
+                comboBoxPlaneSelection.Location = new Point(10, 10); // pick a location on tabPageIndividuals
+                comboBoxPlaneSelection.Width = 200;
 
-            // Whenever user picks a plane, re-draw the charts
-            comboBoxPlaneSelection.SelectedIndexChanged += (s, e) => UpdateCharts();
+                // Fill with all platforms (assuming 'platformObjects' is a valid list)
+                comboBoxPlaneSelection.DataSource = platformObjects;
+                comboBoxPlaneSelection.DisplayMember = "Name";
 
-            // Add it to the "Individuals" tab:
-            tabPageIndividuals.Controls.Add(comboBoxPlaneSelection);
+                // Whenever user picks a plane, re-draw the charts
+                comboBoxPlaneSelection.SelectedIndexChanged += (s, e) => UpdateCharts();
+
+                // Add it to the "Individuals" tab:
+                tabPageIndividuals.Controls.Add(comboBoxPlaneSelection);
+            }
+
+            // For the types tab
+            {
+                comboBoxPlaneTypeSelection = new ComboBox();
+                comboBoxPlaneTypeSelection.DropDownStyle = ComboBoxStyle.DropDownList;
+                comboBoxPlaneTypeSelection.Location = new Point(10, 10); // pick a location on tabPageIndividuals
+                comboBoxPlaneTypeSelection.Width = 200;
+
+                // get all of the types of platformObjects
+                var groupedTypes = platformObjects.GroupBy(p => p.Type).Select(g => new PlatformTypeGroup { Type = g.Key, Platforms = g.ToList() }).ToList();
+
+
+                // Fill with all platforms (assuming 'platformObjects' is a valid list)
+                comboBoxPlaneTypeSelection.DataSource = groupedTypes;
+                comboBoxPlaneSelection.DisplayMember = "Type";
+                //comboBoxPlaneTypeSelection.SelectedIndexChanged += (s, e) => UpdateChartsByType();
+
+                // Whenever user picks a plane, re-draw the charts
+                comboBoxPlaneTypeSelection.SelectedIndexChanged += (s, e) => UpdateCharts();
+
+                // Add it to the "Individuals" tab:
+                tabPageTypes.Controls.Add(comboBoxPlaneTypeSelection);
+            }
+
 
             //logic for updating chart view based on tabs
             tabControlTeamsGraphs.SelectedIndexChanged += tabControlTeamsGraphs_SelectedIndexChanged;
