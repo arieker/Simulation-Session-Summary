@@ -794,9 +794,9 @@ namespace SimulationSessionSummary_NS
                 comboBoxPlaneSelection.Location = new Point(10, 10); // pick a location on tabPageIndividuals
                 comboBoxPlaneSelection.Width = 200;
 
+                comboBoxPlaneSelection.DisplayMember = "Name";
                 // Fill with all platforms (assuming 'platformObjects' is a valid list)
                 comboBoxPlaneSelection.DataSource = platformObjects;
-                comboBoxPlaneSelection.DisplayMember = "Name";
 
                 // Whenever user picks a plane, re-draw the charts
                 comboBoxPlaneSelection.SelectedIndexChanged += (s, e) => UpdateCharts();
@@ -818,7 +818,7 @@ namespace SimulationSessionSummary_NS
 
                 // Fill with all platforms (assuming 'platformObjects' is a valid list)
                 comboBoxPlaneTypeSelection.DataSource = groupedTypes;
-                comboBoxPlaneSelection.DisplayMember = "Type";
+                comboBoxPlaneTypeSelection.DisplayMember = "Type";
                 //comboBoxPlaneTypeSelection.SelectedIndexChanged += (s, e) => UpdateChartsByType();
 
                 // Whenever user picks a plane, re-draw the charts
