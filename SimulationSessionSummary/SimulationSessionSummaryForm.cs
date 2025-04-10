@@ -1331,7 +1331,7 @@ namespace SimulationSessionSummary_NS
             platformObjects.Clear();
             dataGridViewMainPage.DataSource = null;
 
-            // note(anthony): Clean up anything else such as the graphs tab that we currently don't use
+            // note(anthony): Clean up everything/anything
 
             buttonStart.Enabled = true;
             buttonClearData.Enabled = false;
