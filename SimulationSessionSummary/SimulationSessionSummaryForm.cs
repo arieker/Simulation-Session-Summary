@@ -878,12 +878,13 @@ namespace SimulationSessionSummary_NS
                 OurWeaponObject.Fired = true;
                 // note(anthony): While testing after a plane evaded a missile, it managed to shoot one back, but it failed to set a target on it which caused an error, it shouldn't now
                 OurWeaponObject.TargetName = me.TargetAssigned?.Name ?? "None";
-                OurWeaponObject.TargetLat = me.TargetLocationAssigned.Latitude_degrees;
-                OurWeaponObject.TargetLon = me.TargetLocationAssigned.Longitude_degrees;
+                OurWeaponObject.TargetLat = me.TargetLocationAssigned?.Latitude_degrees ?? 0;
+                OurWeaponObject.TargetLon = me.TargetLocationAssigned?.Longitude_degrees ?? 0;
 
                 // For non-bullet weapons, store the plane name in OwnshipName
                 OurWeaponObject.OwnshipName = fe.Name;
 
+                updateMainStatistics();
             }
             catch (Exception ex)
             {
@@ -962,6 +963,8 @@ namespace SimulationSessionSummary_NS
                         }
                     }
                 }
+
+                updateMainStatistics();
             }
             catch (Exception ex)
             {
@@ -998,6 +1001,8 @@ namespace SimulationSessionSummary_NS
                     WeaponObject OurWeaponObject = FindWeaponFromWeaponID(me.ID);
                     OurWeaponObject.Detonated = true;
                 }
+
+                updateMainStatistics();
             }
             catch (Exception ex)
             {
