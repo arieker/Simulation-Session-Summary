@@ -18,7 +18,6 @@ namespace SimulationSessionSummary_NS
     /// <remarks></remarks>
     public class SimulationSessionSummary : IMACEPlugIn
     {
-
         #region "Private Member Variables"
 
         /// <summary>
@@ -59,7 +58,7 @@ namespace SimulationSessionSummary_NS
         /// </summary>
         public string Name
         {
-            get { return "SimulationSessionSummary"; }
+            get { return "NewPluginTemplate1"; }
         }
 
         /// <summary>
@@ -78,7 +77,7 @@ namespace SimulationSessionSummary_NS
                 _mission = _host.Mission;
 
                 // Add a button to the MACE toolbar, selecting this button from the toolbar will invoke the Show method.
-                result = _host.AddButton(this, "Info/Status Windows", "", "SimulationSessionSummary Tooltip", SimulationSessionSummary_NS.Properties.Resources.PluginIcon);
+                result = _host.AddButton(this, "Info/Status Windows", "", "NewPluginTemplate1 Tooltip", SimulationSessionSummary_NS.Properties.Resources.icon123);
 
                 if (result)
                 {
@@ -95,14 +94,14 @@ namespace SimulationSessionSummary_NS
                 // Register local form classes w/ the window config contoller. This 
                 // allows the window config contoller to create form instances when a 
                 // config is restored, if required. 
-                // WindowConfigController.RegisterFormClass(typeof(SimulationSessionSummaryForm));
+                // WindowConfigController.RegisterFormClass(typeof(NewPluginTemplate1Form));
 
                 // note that in its current form, your plugin form will only be created 
                 // when you click the button. Alternatively, you 
                 // can spawn your plugin form when MACE launches, but hide its visibility
                 // this will subscribe to any events, etc. 
 
-                // myform = new SimulationSessionSummaryForm(_mission);
+                // myform = new NewPluginTemplate1Form(_mission);
                 // myform.Show();
                 // myform.Visible = false;
 
