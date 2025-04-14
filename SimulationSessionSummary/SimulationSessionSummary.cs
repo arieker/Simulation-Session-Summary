@@ -77,7 +77,7 @@ namespace SimulationSessionSummary_NS
                 _mission = _host.Mission;
 
                 // Add a button to the MACE toolbar, selecting this button from the toolbar will invoke the Show method.
-                result = _host.AddButton(this, "Info/Status Windows", "", "NewPluginTemplate1 Tooltip", SimulationSessionSummary_NS.Properties.Resources.icon123);
+                result = _host.AddButton(this, "Info/Status Windows", "", "Simulation Session Summary Tooltip", SimulationSessionSummary_NS.Properties.Resources.icon123);
 
                 if (result)
                 {
