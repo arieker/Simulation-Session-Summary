@@ -1444,11 +1444,6 @@ namespace SimulationSessionSummary_NS
             }
         }
 
-        private void tabPageIndividuals_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void tabControlTeamsGraphs_SelectedIndexChanged(object sender, EventArgs e)
         {
 
