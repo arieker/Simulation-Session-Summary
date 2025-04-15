@@ -691,6 +691,7 @@ namespace SimulationSessionSummary_NS
                 chartTypesKillsTime.Series.Clear();
                 chartTypesAccuracy.Series.Clear();
                 comboBoxPlaneTypeSelection.DataSource = null;
+                comboBoxPlaneTypeSelection = null;
             }
         }
 
@@ -1347,6 +1348,7 @@ namespace SimulationSessionSummary_NS
             killHistory.Clear();
             chart2.Series.Clear();
 
+            comboBoxPlaneTypeSelection.DataSource = null;
 
             updateMainStatistics();
         }
