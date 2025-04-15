@@ -1424,6 +1424,7 @@ namespace SimulationSessionSummary_NS
                 {
                     try
                     {
+                        buttonClearData_Click(sender, e);
                         XmlSerializer serializer = new XmlSerializer(typeof(List<PlatformObject>));
                         using (TextReader reader = new StreamReader(openFileDialog.FileName))
                         {
