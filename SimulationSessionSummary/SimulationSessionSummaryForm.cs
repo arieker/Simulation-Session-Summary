@@ -341,6 +341,10 @@ namespace SimulationSessionSummary_NS
                 areaTeamBar.AxisY.Minimum = 0;
                 areaTeamBar.AxisY.Maximum = (maxKills == 0) ? 1 : maxKills + 1;
 
+                // Make the Y axis increment by integer values
+                areaTeamBar.AxisY.Interval = 1;
+                areaTeamBar.AxisY.LabelStyle.Format = "0";
+
                 chart1.Invalidate();
 
                 // -----------------------------------------------------------
@@ -402,6 +406,10 @@ namespace SimulationSessionSummary_NS
                 areaTeamLine.AxisX.Title = "Time (s)";
                 areaTeamLine.AxisY.Title = "Kills";
 
+                // Make the Y axis increment by integer values
+                areaTeamLine.AxisY.Interval = 1;
+                areaTeamLine.AxisY.LabelStyle.Format = "0";
+
                 chart2.Invalidate();
 
                 // -----------------------------------------------------------
@@ -418,16 +426,21 @@ namespace SimulationSessionSummary_NS
                 Series sBlue = chart3Blue.Series.Add("BlueAccuracy");
                 sBlue.ChartType = SeriesChartType.Pie;
 
+
                 // Show percentage labels
                 sBlue.IsValueShownAsLabel = true;
                 sBlue.Label = "#PERCENT{P0}";
+           
 
-                // Add points using indices
+                // Add points
                 int idxBlueHits = sBlue.Points.AddXY("Hits", blueHits);
                 sBlue.Points[idxBlueHits].Color = Color.Blue;
+                // Force visible label with text
+                sBlue.Points[idxBlueHits].Label = "Hits #PERCENT{P0}";
 
                 int idxBlueMisses = sBlue.Points.AddXY("Misses", (blueShots - blueHits));
                 sBlue.Points[idxBlueMisses].Color = Color.DarkGray;
+                sBlue.Points[idxBlueMisses].Label = "Misses #PERCENT{P0}";
 
                 chart3Blue.Invalidate();
 
@@ -449,12 +462,14 @@ namespace SimulationSessionSummary_NS
                 sRed.IsValueShownAsLabel = true;
                 sRed.Label = "#PERCENT{P0}";
 
-                // Add points using indices
+                // Add points
                 int idxRedHits = sRed.Points.AddXY("Hits", redHits);
                 sRed.Points[idxRedHits].Color = Color.Red;
+                sRed.Points[idxRedHits].Label = "Hits #PERCENT{P0}";
 
                 int idxRedMisses = sRed.Points.AddXY("Misses", (redShots - redHits));
                 sRed.Points[idxRedMisses].Color = Color.DarkGray;
+                sRed.Points[idxRedMisses].Label = "Misses #PERCENT{P0}";
 
                 chart3Red.Invalidate();
             }
@@ -491,7 +506,8 @@ namespace SimulationSessionSummary_NS
                 Series planeStepSeries = new Series($"{selectedPlane.Name} Kills")
                 {
                     ChartType = SeriesChartType.StepLine,
-                    Color = Color.Blue
+                    Color = Color.Blue,
+                    BorderWidth = 3
                 };
 
                 // Fill from plane's kill record
@@ -524,6 +540,10 @@ namespace SimulationSessionSummary_NS
                 areaIndividual.AxisX.Title = "Time (s)";
                 areaIndividual.AxisY.Title = "Kills";
 
+                // Make the Y axis increment by integer values
+                areaIndividual.AxisY.Interval = 1;
+                areaIndividual.AxisY.LabelStyle.Format = "0";
+
                 chart4.Invalidate();
 
                 // -----------------------------------------------------------
@@ -548,12 +568,14 @@ namespace SimulationSessionSummary_NS
                 indivAccuracySeries.IsValueShownAsLabel = true;
                 indivAccuracySeries.Label = "#PERCENT{P0}";
 
-                // Add points using indices
+                // Add points
                 int idxIndHits = indivAccuracySeries.Points.AddXY("Hits", hits);
                 indivAccuracySeries.Points[idxIndHits].Color = Color.Purple;
+                indivAccuracySeries.Points[idxIndHits].Label = "Hits #PERCENT{P0}";
 
                 int idxIndMisses = indivAccuracySeries.Points.AddXY("Misses", (shots - hits));
                 indivAccuracySeries.Points[idxIndMisses].Color = Color.DarkGray;
+                indivAccuracySeries.Points[idxIndMisses].Label = "Misses #PERCENT{P0}";
 
                 chart5.Series.Add(indivAccuracySeries);
                 chart5.Invalidate();
@@ -587,7 +609,8 @@ namespace SimulationSessionSummary_NS
                 Series planeStepSeries = new Series($"{selectedType.Type} Kills")
                 {
                     ChartType = SeriesChartType.StepLine,
-                    Color = Color.Blue
+                    Color = Color.Blue,
+                    BorderWidth = 3
                 };
 
                 double latestKillSec = double.MinValue;
@@ -637,6 +660,10 @@ namespace SimulationSessionSummary_NS
                 areaType.AxisX.Title = "Time (s)";
                 areaType.AxisY.Title = "Kills";
 
+                // Make the Y axis increment by integer values
+                areaType.AxisY.Interval = 1;
+                areaType.AxisY.LabelStyle.Format = "0";
+
                 chartTypesKillsTime.Invalidate();
 
                 // -----------------------------------------------------------
@@ -666,18 +693,20 @@ namespace SimulationSessionSummary_NS
                     Label = "#PERCENT{P0}"
                 };
 
+                // Add points
                 int idxTypeHits = typeAccuracySeries.Points.AddXY("Hits", hitsTotal);
                 typeAccuracySeries.Points[idxTypeHits].Color = Color.Purple;
+                typeAccuracySeries.Points[idxTypeHits].Label = "Hits #PERCENT{P0}";
 
                 int idxTypeMisses = typeAccuracySeries.Points.AddXY("Misses", shotsTotal - hitsTotal);
                 typeAccuracySeries.Points[idxTypeMisses].Color = Color.DarkGray;
+                typeAccuracySeries.Points[idxTypeMisses].Label = "Misses #PERCENT{P0}";
 
                 chartTypesAccuracy.Series.Add(typeAccuracySeries);
                 chartTypesAccuracy.Invalidate();
             }
-
             // ===============================================================
-            // If neither Teams nor Individuals tab (some other tab)...
+            // If neither Teams nor Individuals nor Types tab...
             // ===============================================================
             else
             {
@@ -693,7 +722,6 @@ namespace SimulationSessionSummary_NS
                 comboBoxPlaneTypeSelection.DataSource = null;
             }
         }
-
 
 
 
