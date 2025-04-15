@@ -223,7 +223,6 @@ namespace SimulationSessionSummary_NS
             this.tabPageIndividuals.TabIndex = 1;
             this.tabPageIndividuals.Text = "Individuals";
             this.tabPageIndividuals.UseVisualStyleBackColor = true;
-            this.tabPageIndividuals.Click += new System.EventHandler(this.tabPageIndividuals_Click);
             // 
             // chart5
             // 
