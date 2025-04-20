@@ -86,11 +86,6 @@ namespace SimulationSessionSummary_NS
 
         public int Kills => WeaponObjects.Count(w => w.ResultedInKill) + GunObjects.Sum(g => g.Kills); //Gun.KilledPlatforms.Count;
 
-        [XmlIgnore]
-        public List<(DateTime Timestamp, int PlaneKillCount)> PerPlaneKillRecords { get; set; }
-            = new List<(DateTime, int)>();
-
-
         public int RemainingWeaponsCount => WeaponObjects.Count(w => !w.Fired);
 
         public int FiredWeaponsCount => WeaponObjects.Count(w => w.Fired);

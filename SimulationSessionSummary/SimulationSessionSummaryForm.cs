@@ -42,14 +42,11 @@ namespace SimulationSessionSummary_NS
 
         //variables for charts
         private List<(DateTime Timestamp, int BlueKills, int RedKills)> killHistory = new List<(DateTime, int, int)>();
-        public List<(DateTime Timestamp, int PlaneKillCount)> PerPlaneKillRecords { get; set; } = new List<(DateTime, int)>();
-
         private DateTime simulationStartTime;
         private Timer killHistoryTimer;
 
         private ComboBox comboBoxPlaneSelection;
         private ComboBox comboBoxPlaneTypeSelection;
-
 
         // These two lists are READ ONLY!!! And update automatically
         // The point of them is to be used as a very convenient DataSource for dataGridViews while still keeping one main list for convenience
@@ -219,6 +216,9 @@ namespace SimulationSessionSummary_NS
             // REFERENCE: Blue Team 1 | Red Team 2
 
             dataGridViewMainPage.Refresh();
+            // for the individuals page
+            comboBoxIndividuals.Refresh();
+            Debug.WriteLine("poop");
 
             labelBlueTeamAliveEntities.Text = GetTeamAlivePlatformsList(1).Count.ToString();
             labelBlueTeamRemainingWeapons.Text = GetTeamRemainingWeaponsList(1).Count.ToString();
@@ -301,7 +301,6 @@ namespace SimulationSessionSummary_NS
             {
                 return;
             }
-
             // ===============================================================
             // If the current tab is the TEAMS tab...
             // ===============================================================
@@ -317,8 +316,7 @@ namespace SimulationSessionSummary_NS
                 chart1.Titles.Clear();
                 chart1.Titles.Add("Team Kills (Bar Chart)");
 
-                int blueTeamKills = GetTeamKills(1);
-                int redTeamKills = GetTeamKills(2);
+                chart1.Series.Add(killsSeries);
 
                 Series killsSeries = new Series("Team Kills")
                 {
@@ -509,7 +507,8 @@ namespace SimulationSessionSummary_NS
                     Color = Color.Blue,
                     BorderWidth = 3
                 };
-
+                chart2.Series.Add(blueSeries);
+            }
                 // Fill from plane's kill record
                 foreach (var record in selectedPlane.PerPlaneKillRecords)
                 {
@@ -722,8 +721,6 @@ namespace SimulationSessionSummary_NS
             }
         }
 
-
-
         //used for kills over time graphs
         private void SetupKillHistoryTimer()
         {
@@ -805,6 +802,8 @@ namespace SimulationSessionSummary_NS
         private void InitUI()
         {
             dataGridViewMainPage.DataSource = platformObjects.ToArray();
+            //dataGridViewMainPage.DataSource = platformObjects.ToArray();
+            //comboBoxIndividuals.DataSource = platformObjects.ToArray();
 
             foreach (PlatformObject platformObject in platformObjects)
             {
@@ -855,13 +854,12 @@ namespace SimulationSessionSummary_NS
                 tabPageTypes.Controls.Add(comboBoxPlaneTypeSelection);
             }
 
+            }
 
-            //logic for updating chart view based on tabs
-            tabControlTeamsGraphs.SelectedIndexChanged += tabControlTeamsGraphs_SelectedIndexChanged;
-
-            UpdateCharts();
             updateMainStatistics();
         }
+
+        
 
         #endregion
 
@@ -888,16 +886,14 @@ namespace SimulationSessionSummary_NS
 
                 GunObject OurGunObject = findGunFromName(me.Name);
 
-                if (OurGunObject != null)
+                if(OurGunObject != null)
                 {
-                    // It's a bullet
                     OurGunObject.RemainingBullets--;
                     OurGunObject.ActiveBulletEntityIDs.Add(me.ID);
-
-                    // NEW LINE: store the plane’s name in FiringPlatformName
-                    OurGunObject.FiringPlatformName = fe.Name;
                     return;
                 }
+
+
 
                 // Should only get here if it's not a bullet
                 WeaponObject OurWeaponObject = FindWeaponFromWeaponID(me.ID);
@@ -921,13 +917,6 @@ namespace SimulationSessionSummary_NS
             }
         }
 
-
-        /// <summary>
-        /// This event is called whenever weapon damage occurs in MACE. Use this handler to get information about the 
-        /// weapon damage event.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         /// <summary>
         /// This event is called whenever weapon damage occurs in MACE. Use this handler to get information about the 
         /// weapon damage event.
@@ -954,18 +943,6 @@ namespace SimulationSessionSummary_NS
                     {
                         OurTargetEntity.Alive = false;
                         OurGunObject.KilledPlatforms.Add(OurTargetEntity);
-
-                        // NEW CODE: Log the kill in the plane's PerPlaneKillRecords, using FiringPlatformName.
-                        if (!string.IsNullOrEmpty(OurGunObject.FiringPlatformName))
-                        {
-                            PlatformObject firingPlane = FindPlatformFromName(OurGunObject.FiringPlatformName);
-                            if (firingPlane != null)
-                            {
-                                firingPlane.PerPlaneKillRecords.Add(
-                                    (DateTime.Now, firingPlane.Kills)
-                                );
-                            }
-                        }
                     }
                 }
                 else
@@ -976,18 +953,6 @@ namespace SimulationSessionSummary_NS
                     {
                         OurTargetEntity.Alive = false;
                         OurWeaponObject.ResultedInKill = true;
-
-                        // For missiles or bombs, we use OwnshipName
-                        if (!string.IsNullOrEmpty(OurWeaponObject.OwnshipName))
-                        {
-                            PlatformObject firingPlane = FindPlatformFromName(OurWeaponObject.OwnshipName);
-                            if (firingPlane != null)
-                            {
-                                firingPlane.PerPlaneKillRecords.Add(
-                                    (DateTime.Now, firingPlane.Kills)
-                                );
-                            }
-                        }
                     }
                 }
 
@@ -1002,7 +967,6 @@ namespace SimulationSessionSummary_NS
             }
 
         }
-
         /// <summary>
         /// This event is called whenever a weapon detonates in MACE. Use this handler to get information about the 
         /// detonation event. 
@@ -1345,12 +1309,6 @@ namespace SimulationSessionSummary_NS
 
             simulationStartTime = DateTime.Now;
             killHistory.Clear();
-            foreach (var plane in platformObjects)
-            {
-                plane.PerPlaneKillRecords.Add(
-                    (simulationStartTime, 0)
-                );
-            }
             SetupKillHistoryTimer();
 
             _mission.WeaponDetonation += HandleWeaponDetonated;
@@ -1443,13 +1401,6 @@ namespace SimulationSessionSummary_NS
                     }
                 }
             }
-        }
-
-        private void tabControlTeamsGraphs_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-            UpdateCharts();
-    
         }
     }
 }

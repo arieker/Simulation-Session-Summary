@@ -72,9 +72,6 @@ namespace SimulationSessionSummary_NS
             OnPropertyChanged(nameof(PlatformHitCounts));
         }
 
-        // new property for storing which plane fired this gun's bullets
-        public string FiringPlatformName { get; set; }
-
         // Parameterless constructor (required for serialization)
         public GunObject() { }
 

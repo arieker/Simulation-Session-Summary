@@ -54,12 +54,13 @@ namespace SimulationSessionSummary_NS
             System.Windows.Forms.DataVisualization.Charting.Legend legend16 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             System.Windows.Forms.DataVisualization.Charting.Series series16 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.tabPageGraphs = new System.Windows.Forms.TabPage();
-            this.tabControlTeamsGraphs = new System.Windows.Forms.TabControl();
+            this.tabControlGraphs = new System.Windows.Forms.TabControl();
             this.tabPageTeams = new System.Windows.Forms.TabPage();
             this.chart3Red = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.chart3Blue = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.chart2 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            this.chart3 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.tabPageIndividuals = new System.Windows.Forms.TabPage();
             this.chart5 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.chart4 = new System.Windows.Forms.DataVisualization.Charting.Chart();
@@ -85,12 +86,13 @@ namespace SimulationSessionSummary_NS
             this.chartTypesAccuracy = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.chartTypesKillsTime = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.tabPageGraphs.SuspendLayout();
-            this.tabControlTeamsGraphs.SuspendLayout();
+            this.tabControlGraphs.SuspendLayout();
             this.tabPageTeams.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.chart3Red)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.chart3Blue)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.chart2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.chart3)).BeginInit();
             this.tabPageIndividuals.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.chart5)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.chart4)).BeginInit();
@@ -118,7 +120,7 @@ namespace SimulationSessionSummary_NS
             this.tabPageGraphs.Text = "Graphs";
             this.tabPageGraphs.UseVisualStyleBackColor = true;
             // 
-            // tabControlTeamsGraphs
+            // tabControlGraphs
             // 
             this.tabControlTeamsGraphs.Controls.Add(this.tabPageTeams);
             this.tabControlTeamsGraphs.Controls.Add(this.tabPageIndividuals);
@@ -128,7 +130,6 @@ namespace SimulationSessionSummary_NS
             this.tabControlTeamsGraphs.SelectedIndex = 0;
             this.tabControlTeamsGraphs.Size = new System.Drawing.Size(961, 671);
             this.tabControlTeamsGraphs.TabIndex = 1;
-            this.tabControlTeamsGraphs.SelectedIndexChanged += new System.EventHandler(this.tabControlTeamsGraphs_SelectedIndexChanged);
             // 
             // tabPageTeams
             // 
@@ -211,6 +212,22 @@ namespace SimulationSessionSummary_NS
             this.chart1.Size = new System.Drawing.Size(489, 317);
             this.chart1.TabIndex = 1;
             this.chart1.Text = "chart2";
+            // 
+            // chart3
+            // 
+            chartArea3.Name = "ChartArea1";
+            this.chart3.ChartAreas.Add(chartArea3);
+            legend3.Name = "Legend1";
+            this.chart3.Legends.Add(legend3);
+            this.chart3.Location = new System.Drawing.Point(647, 6);
+            this.chart3.Name = "chart3";
+            series3.ChartArea = "ChartArea1";
+            series3.Legend = "Legend1";
+            series3.Name = "Series1";
+            this.chart3.Series.Add(series3);
+            this.chart3.Size = new System.Drawing.Size(300, 300);
+            this.chart3.TabIndex = 0;
+            this.chart3.Text = "chart1";
             // 
             // tabPageIndividuals
             // 
@@ -329,7 +346,7 @@ namespace SimulationSessionSummary_NS
             this.buttonStart.Name = "buttonStart";
             this.buttonStart.Size = new System.Drawing.Size(75, 23);
             this.buttonStart.TabIndex = 16;
-            this.buttonStart.Text = "Start";
+            this.buttonStart.Text = "poop";
             this.buttonStart.UseVisualStyleBackColor = true;
             this.buttonStart.Click += new System.EventHandler(this.buttonStart_Click);
             // 
@@ -515,12 +532,13 @@ namespace SimulationSessionSummary_NS
             this.Name = "SimulationSessionSummaryForm";
             this.Text = "Simulation Session Summary";
             this.tabPageGraphs.ResumeLayout(false);
-            this.tabControlTeamsGraphs.ResumeLayout(false);
+            this.tabControlGraphs.ResumeLayout(false);
             this.tabPageTeams.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.chart3Red)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.chart3Blue)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.chart2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.chart3)).EndInit();
             this.tabPageIndividuals.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.chart5)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.chart4)).EndInit();
@@ -544,6 +562,7 @@ namespace SimulationSessionSummary_NS
         #endregion
 
         private System.Windows.Forms.TabPage tabPageGraphs;
+        private System.Windows.Forms.DataVisualization.Charting.Chart chart3;
         private System.Windows.Forms.TabPage tabPageMain;
         private System.Windows.Forms.DataGridView dataGridViewMainPage;
         private System.Windows.Forms.Button buttonSaveXML;
@@ -558,16 +577,19 @@ namespace SimulationSessionSummary_NS
         private System.Windows.Forms.Label labelRedTeam;
         private System.Windows.Forms.Label labelBlueTeam;
         private System.Windows.Forms.TabControl tabControlMain;
-        private System.Windows.Forms.TabControl tabControlTeamsGraphs;
+        private System.Windows.Forms.TabControl tabControlGraphs;
         private System.Windows.Forms.TabPage tabPageTeams;
         private System.Windows.Forms.TabPage tabPageIndividuals;
+        private System.Windows.Forms.DataVisualization.Charting.Chart chartIndividuals2;
         private System.Windows.Forms.DataVisualization.Charting.Chart chart2;
         private System.Windows.Forms.DataVisualization.Charting.Chart chart1;
-        private System.Windows.Forms.DataVisualization.Charting.Chart chart4;
+        private System.Windows.Forms.DataVisualization.Charting.Chart chartPieIndividuals1;
+        private System.Windows.Forms.DataVisualization.Charting.Chart chartIndividuals3;
         private System.Windows.Forms.SplitContainer splitContainerMain;
         private System.Windows.Forms.Button buttonLoadXML;
         private System.Windows.Forms.Button buttonClearData;
         private System.Windows.Forms.Label labelLoadXML;
+<<<<<<< Andy
         private System.Windows.Forms.DataVisualization.Charting.Chart chart3Red;
         private System.Windows.Forms.DataVisualization.Charting.Chart chart3Blue;
         private System.Windows.Forms.DataVisualization.Charting.Chart chart5;
